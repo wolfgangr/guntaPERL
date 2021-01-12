@@ -83,6 +83,8 @@ for $dat_row (0 .. $#dat_ary ) {
 	next if ($dat_item == -100 ) ;
 	next if ($dat_item == -9 ) ;
 
+	my $name = $$di{ name};
+	$name =~ s/\x{e4}/ä/ ;
 
 	my $id = $$di{ id};
 	my $unit = $$di{ unit};
