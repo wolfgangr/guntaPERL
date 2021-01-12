@@ -2,9 +2,11 @@
 # try to parse daqdesc.cgi from guntamatic heater
 # and to provie meaning and configurability to log data
 
+# use Data::Dumper;
+use JSON;
 use Data::Dumper::Simple;
 use LWP::Simple;
-
+# use Data::Dumper;
 
 # http://${GHOST}/ext/daqdata.cgi?key=22619C862396F373B3FA3E7B276E79C6E563 
 my $data_api = '/daqdata.cgi' ;
@@ -39,5 +41,26 @@ my $data = get ( $data_url)  or die " cannot retrieve $data_url";
 
 print $desc, "\n" ;
 print $data, "\n" ;
+
+my $decoded = JSON::XS::decode_json($desc);
+# my $decoded = JSON::XS::get_ascii($desc);
+
+# my $decoder = new JSON::XS->new;
+# $decoder->latin1(1) ;
+# $decoder->utf8 ;
+
+# my  $decoded = $decoder->decode($desc);
+
+print Dumper ($decoded) ;
+
+my %desc_by_id;
+for $di ( @$decoded ) {
+	my $unit = $$di{ unit};
+	 $unit =~ s/\x{b0}/°/ ; # crude hack, better understand utf and bretheren....
+	printf "id=%03d, unit=%s, type=%s, name=%s\n", $$di{ id},  $unit, $$di{ type},$$di{ name}, ;
+
+}
+
+
 
 
