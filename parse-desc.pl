@@ -55,12 +55,38 @@ print Dumper ($decoded) ;
 
 my %desc_by_id;
 for $di ( @$decoded ) {
+	my $id = $$di{ id};
 	my $unit = $$di{ unit};
 	 $unit =~ s/\x{b0}/°/ ; # crude hack, better understand utf and bretheren....
-	printf "id=%03d, unit=%s, type=%s, name=%s\n", $$di{ id},  $unit, $$di{ type},$$di{ name}, ;
-
+	printf "id=%03d, unit=%s, type=%s, name=%s\n", $id,  $unit, $$di{ type},$$di{ name}, ;
+	$desc_by_id{ $id } = $di;
 }
 
+print Dumper ( %desc_by_id );
+
+my @dat_ary = split ( '\n', $data ) ;
 
 
+print Dumper ( @dat_ary );
 
+for $dat_row (0 .. $#dat_ary ) {
+
+	$dat_item = $dat_ary[ $dat_row ];
+	# next if ( $dat_item  =~ /^\s*$/ )   ;
+	
+
+	$di = $desc_by_id{ $dat_row };
+
+	# these seem to be unused vars
+	next if ( $$di{ name} =~ /^\s*$/ )   ;
+	next if ($dat_item == -20 ) ;
+	next if ($dat_item == -100 ) ;
+	next if ($dat_item == -9 ) ;
+
+
+	my $id = $$di{ id};
+	my $unit = $$di{ unit};
+	$unit =~ s/\x{b0}/°/ ;
+
+	printf "id=%03d, value=%s, unit=%s, type=%s, name=%s\n", $id, $dat_item,  $unit, $$di{ type},$$di{ name}, ;
+}
