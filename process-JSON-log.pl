@@ -12,6 +12,11 @@ use Data::Dumper::Simple;
 # use LWP::Simple;
 use JSON;
 
+my $rrd_temps = './rrd/temps.rrd';
+# my $rrd_status = './rrd/status.rrd';
+# my $rrd_extra = './rrd/extra.rrd';
+
+
 our (%config, %selectors, %config_by_tag );
 our ($desc_url, $data_url);
 our %credentials;
@@ -49,16 +54,27 @@ while (<$FILE>) {
 		my $tag = $config{ $id }->{ tag } ;
 		next unless defined $tag ;
 
-		printf "\t ID=%03d, tag=%s,       \t value=%s  \n", $id,  $tag,  $val;
+		### printf "\t ID=%03d, tag=%s,       \t value=%s  \n", $id,  $tag,  $val;
 
 		$tv{$tag} = $val;
 	}
-	print Dumper ( %tv);
+	### print Dumper ( %tv);
 
 	# print "  -> found values: ", scalar @values ;
 	# print "\n";
-	printf " at time %s = %011d found %d data fields \n", $dt, $unixtime, scalar @values ;
-	
+	### printf " at time %s = %011d found %d data fields \n", $dt, $unixtime, scalar @values ;
+
+	my @taglist = @{$selectors{ rrd }} ;
+	my $rrd_template = join (':', @taglist);
+	print $rrd_template , "\n";
+
+	my @rrd_values = map { $tv{ $_ }   } @taglist;
+	my $rrd_values = join (':', $unixtime  , @taglist);
+	print $rrd_values , "\n";
+
+	# RRDs::update($rrdfile, '--template', $rrd_template, $rrd_values);
+	# if ( RRDs::error ) {
+	#     debug_printf (1, "error updating RRD %s: %s \n", $rrdfile , RRDs::error ) ;
 
 	die "========================== DEBUG ==========================";
 
