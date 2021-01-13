@@ -1,6 +1,7 @@
 #!/bin/bash
 # was at
 
+
 GHOST=Guntamatic-ph50.my.host
 
 cd /home/foobar/guntamatic
