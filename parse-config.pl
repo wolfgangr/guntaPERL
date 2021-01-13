@@ -24,6 +24,12 @@ my $data_string = get ( $data_url)  or die " cannot retrieve boiler data $data_u
 my @data = split ( '\n', $data_string ) ;
 printf "data: %s\n", join ( ' : ' , @data );
 
+
+for my $tag (sort  keys %config) {
+	print $tag, ' ' ;
+}
+
+
 exit;
 
 #------------------------------------------
