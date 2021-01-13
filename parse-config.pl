@@ -11,19 +11,10 @@ use LWP::Simple;
 our %config;
 require ('./config.pm');
 
-my $cfg_txt = read_file ('config.pm');
-print $cfg_txt;
-
-my $cfg_ptr = eval $cfg_txt;
-# my %config = %$cfg_ptr ;
 print Dumper (%config);
 
 exit;
 
 #------------------------------------------
 
-sub read_file {
-	my $filename = shift;
-	my $content = `cat $filename`;
-	return $content ;
-}
+
