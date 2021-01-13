@@ -6,6 +6,7 @@ secret.pm
 olddata/*
 old_api/*
 rrd/*
+test/*
 daqd???.cgi?key=*3*
 rrd2csv.pl
 rrdtest.pl
