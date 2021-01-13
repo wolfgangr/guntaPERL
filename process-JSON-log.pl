@@ -25,9 +25,8 @@ open (my $FILE, '<', $filename) or die "cannot open $filename";
 
 
 while (<$FILE>) {
-	# print $_;
-	my ($dt, $vals) = $_ =~   /^\[(.*)\];\[(.*)\]$/ ;
-	# print $dt  ;
+	# my ($dt, $vals) = $_ =~   /^\[(.*)\];\[(.*)\]$/ ;
+	my ($dt, $vals) = $_ =~   /^\[(.*)\];(\[.*\])$/ ;
 	
 	#  date -d'2020-12-31 23:05:02+00:00' +%s
 	my $unixtime = `date -d'$dt' +%s`;
@@ -35,17 +34,26 @@ while (<$FILE>) {
 	
 	# manually or JSON decoder?
 	
-	my @values = split ( ',' ,  $vals);
+	# my @values = split ( ',' ,  $vals);
+	my $v_p = JSON::XS::decode_json($vals);
+	my @values = @$v_p;
 
 	# I want tag -> value pairs
-	
+	my %tv;
+
 	for my $i (0 .. $#values) {
 		my $val = $values[  $i ] ;
 		my $id = $js_index[ $i ] ;
+
+		# use only configured values
 		my $tag = $config{ $id }->{ tag } ;
 		next unless defined $tag ;
+
 		printf "\t ID=%03d, tag=%s,       \t value=%s  \n", $id,  $tag,  $val;
+
+		$tv{$tag} = $val;
 	}
+	print Dumper ( %tv);
 
 	# print "  -> found values: ", scalar @values ;
 	# print "\n";
