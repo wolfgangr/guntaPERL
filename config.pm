@@ -1,4 +1,4 @@
-{
+our %config =  (      # {
   '3' => {
            'type' => 'float',
            'id' => 3,
@@ -155,4 +155,8 @@
              'name' => 'Asche leeren in',
              'type' => 'integer'
            }
-}
+
+);	   
+#} ;
+
+1;
