@@ -50,8 +50,8 @@ for my $sl (sort keys %selectors ) {
 	print " - includes: ", join (' ', @list) , "\n";
 
 	my @not_in_list = set_difference(\@check_select, \@list);
-	print Dumper (@not_in_list );
-	# print " - excludes: ", join (' ', @not_in_list) , "\n";
+	# print Dumper (@not_in_list );
+	print " - excludes: ", join (' ', @not_in_list) , "\n";
 
 	# cycle over tags and print
 	for my $s_tag (@list) {
@@ -78,7 +78,8 @@ sub set_difference {
 	my @B = @$minor;
 
 	# no need to understand as long as it works ;-)
-	my @C=map{!${{map{$_,1}@B}}{$_}&&$_||undef}@A;
+	my @C=grep!${{map{$_,1}@B}}{$_},@A;
+	# my @C=map{!${{map{$_,1}@B}}{$_}&&$_||undef}@A;
 	return @C;
 }
 
