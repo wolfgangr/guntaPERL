@@ -7,10 +7,10 @@
 use warnings;
 use strict;
 
-
-use Data::Dumper::Simple;
+use Data::Dumper::Simple ;
 # use LWP::Simple;
-use JSON;
+use JSON() ;
+use RRDs() ;
 
 my $rrd_temps = './rrd/temps.rrd';
 # my $rrd_status = './rrd/status.rrd';
@@ -58,7 +58,7 @@ while (<$FILE>) {
 
 		$tv{$tag} = $val;
 	}
-	### print Dumper ( %tv);
+	print Dumper ( %tv);
 
 	# print "  -> found values: ", scalar @values ;
 	# print "\n";
@@ -69,14 +69,16 @@ while (<$FILE>) {
 	print $rrd_template , "\n";
 
 	my @rrd_values = map { $tv{ $_ }   } @taglist;
-	my $rrd_values = join (':', $unixtime  , @taglist);
+	my $rrd_values = join (':', $unixtime  , @rrd_values);
 	print $rrd_values , "\n";
 
-	# RRDs::update($rrdfile, '--template', $rrd_template, $rrd_values);
-	# if ( RRDs::error ) {
-	#     debug_printf (1, "error updating RRD %s: %s \n", $rrdfile , RRDs::error ) ;
+	RRDs::update($rrd_temps, '--template', $rrd_template, $rrd_values);
+	if ( RRDs::error ) {
+		printf ( "error updating RRD %s: %s \n", $rrd_temps , RRDs::error ) ;
+		die "rrd update error";
+	}
 
-	die "========================== DEBUG ==========================";
+	# die "========================== DEBUG ==========================";
 
 }
 

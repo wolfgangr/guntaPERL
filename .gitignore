@@ -7,3 +7,6 @@ olddata/*
 old_api/*
 rrd/*
 daqd???.cgi?key=*3*
+rrd2csv.pl
+rrdtest.pl
+
