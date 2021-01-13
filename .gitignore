@@ -3,4 +3,5 @@ secret.pm
 *.log
 *.swp
 *.tmp
+olddata/*
 daqd???.cgi?key=*3*
