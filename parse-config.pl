@@ -49,6 +49,9 @@ for my $sl (sort keys %selectors ) {
 	print "selector $sl:  \n";
 	print " - includes: ", join (' ', @list) , "\n";
 
+	my @not_in_list = set_difference(\@check_select, \@list);
+	print " - excludes: ", join (' ', @not_in_list) , "\n";
+
 	# cycle over tags and print
 	for my $s_tag (@list) {
 		my $key = $config_by_tag{ $s_tag  }->{ id  } ;
@@ -64,6 +67,20 @@ print "\n" ;
 exit;
 
 #------------------------------------------
+
+
+# https://www.linuxquestions.org/questions/programming-9/how-to-compare-two-lists-arrays-in-perl-636686/#post3128140
+# @rest = set_difference ( \@major, \@minor )
+sub set_difference {
+	my ($major, $minor) = @_;
+	my @A = @$major;
+	my @B = @$minor;
+
+	# no need to understand as long as it works ;-)
+	my @C=map{!${{map{$_,1}@B}}{$_}&&$_||undef}@A;
+	return @C;
+}
+
 
 # print_config_item ( $dat_val, $item, $formatf )
 sub print_config_item {
