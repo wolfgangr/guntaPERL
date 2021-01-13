@@ -13,6 +13,7 @@ use JSON() ;
 use RRDs() ;
 
 my $rrd_temps = './rrd/temps.rrd';
+my $status_log = '/var/log/wrosner/guntamatic-status.log' ;
 # my $rrd_status = './rrd/status.rrd';
 # my $rrd_extra = './rrd/extra.rrd';
 
@@ -26,10 +27,12 @@ require ('./config.pm');
 
 my $filename = shift  @ARGV or die "usage: $0 filename-log";
 
-open (my $FILE, '<', $filename) or die "cannot open $filename";
+open (my $FILE, '<', $filename) or die "cannot read from $filename";
+open (my $STATUS, '>>', $status_log) or die "cannot write to $status_log";
+
 
 # i want to learn about status behaviour
-my $laststatus;
+my $last_status ='';
 my %status_analyzer;
 
 while (<$FILE>) {
@@ -61,7 +64,7 @@ while (<$FILE>) {
 
 		$tv{$tag} = $val;
 	}
-	print Dumper ( %tv);
+	# print Dumper ( %tv);
 
 	# print "  -> found values: ", scalar @values ;
 	# print "\n";
@@ -70,9 +73,10 @@ while (<$FILE>) {
 	my @taglist = @{$selectors{ status }} ;
 
 	# cycle over selected value pairs
+	my $status_string ;
 	for my $tag (@taglist) {
 		my $val = $tv{  $tag } ;
-		printf "%s :   %s  ->  %s  \n", $dt, $tag , $val;
+		# printf "%s :   %s  ->  %s  \n", $dt, $tag , $val;
 
 		# keep status changer tag
 		my $status_tag = sprintf "%s-%s", $tag , $val;
@@ -83,7 +87,25 @@ while (<$FILE>) {
 		}
 		$status_analyzer{ $status_tag }->{ last  } = $dt;
 		$status_analyzer{ $status_tag }->{ count  }++;
+
+		# keep skd of cononical status tag
+		$status_string .= sprintf (":%s->%s" , $tag , $val);
 	}
+
+	# if status changed.... log and memorize
+	if ($status_string ne $last_status ) {
+ 		
+
+		my $logstring = sprintf "%s : new status:  %s  ", $dt, $status_string;
+		print $logstring, "\n";
+		print $STATUS $logstring, "\n";
+
+		$last_status = $status_string ;
+		# system ("echo $logstring >> $status_log")  ;
+		# status_log ....
+	}
+
+
 	# my $rrd_template = join (':', @taglist);
 	# print $rrd_template , "\n";
 
@@ -104,5 +126,5 @@ while (<$FILE>) {
 print Dumper ( %status_analyzer );
 
 close $FILE;
-
+close $STATUS;
 
