@@ -4,4 +4,5 @@ secret.pm
 *.swp
 *.tmp
 olddata/*
+old_api/*
 daqd???.cgi?key=*3*

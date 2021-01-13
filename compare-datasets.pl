@@ -69,7 +69,7 @@ for my $i (0 ..  $#dat_r_ary) {
 	my $js_pos = $js_rev_index{ $i };
 	my $_e_data = (defined $js_pos) ? $dat_e_ary[ $js_pos  ]  : '-';
 
-	printf "from /: %s    from /ext/:   %s \n", $dat_r_ary[ $i ], $_e_data ;
+	printf "%03d\tfrom /: %s    \tfrom /ext/:   %s \n", $i,  $dat_r_ary[ $i ], $_e_data ;
 }
 
 

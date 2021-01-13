@@ -210,6 +210,20 @@ our %config =  (
 );	   
 
 
+# oops - the JSON format hat 'holes' in it - so we might need to remap
+our @js_index  =  qw( 3 10 13 15 17 18 20 22 23 24 25 26 27 28 29 30 
+	31 32 33 34 35 37 38 40 42 43 45 46 47 49 50 52 54 55 57 58 59 
+	61 62 64 66 67 71 73 77 78 79 80 81 82 83 84 85 86 87 88 89 90 
+	91 92 93 94 95 98 99 100 101 102 103 104 106 107 108 109 110 111 116 );
+
+# and the reverse - as hash:
+our %js_rev_index;
+for (0 .. $#js_index) {
+	$js_rev_index{ $js_index[ $_ ] } =  $_ ;
+}
+
+
+
 our %config_by_tag;
 
 for  (keys  %config) {
