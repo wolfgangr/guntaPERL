@@ -25,13 +25,27 @@ my @data = split ( '\n', $data_string ) ;
 printf "data: %s\n", join ( ' : ' , @data );
 
 
-for my $tag (sort  keys %config) {
-	print $tag, ' ' ;
+for my $key (sort numeric_sort   keys %config) {
+	my $item_desc = $config{ $key };
+	my $unit = $item_desc->{ unit } ;
+	$unit = '' unless  defined $unit ;
+
+	# print $key, ' - ' ;
+	printf "id=%03d, value=%s, unit=%s, type=%s, name=%s\n",
+		$item_desc->{ id } ,
+		$data[ $key ] ,
+		$unit ,			# $item_desc->{ unit } ,
+		$item_desc->{ type } ,
+		$item_desc->{ name } ,
+		;
+
 }
 
+print "\n" ;
 
 exit;
 
 #------------------------------------------
-
+# sort helper
+sub numeric_sort { $a <=> $b  } 
 
