@@ -50,7 +50,8 @@ for my $sl (sort keys %selectors ) {
 	print " - includes: ", join (' ', @list) , "\n";
 
 	my @not_in_list = set_difference(\@check_select, \@list);
-	print " - excludes: ", join (' ', @not_in_list) , "\n";
+	print Dumper (@not_in_list );
+	# print " - excludes: ", join (' ', @not_in_list) , "\n";
 
 	# cycle over tags and print
 	for my $s_tag (@list) {
