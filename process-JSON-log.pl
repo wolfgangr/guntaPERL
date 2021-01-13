@@ -74,8 +74,8 @@ while (<$FILE>) {
 
 	RRDs::update($rrd_temps, '--template', $rrd_template, $rrd_values);
 	if ( RRDs::error ) {
-		printf ( "error updating RRD %s: %s \n", $rrd_temps , RRDs::error ) ;
-		die "rrd update error";
+		printf STDERR ( "error updating RRD %s: %s \n", $rrd_temps , RRDs::error ) ;
+		# die "rrd update error";
 	}
 
 	# die "========================== DEBUG ==========================";
