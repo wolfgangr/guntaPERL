@@ -14,6 +14,8 @@
 
 
 
+
+
 our %config =  ( 
   '3' => {
            'type' => 'float',
@@ -173,5 +175,22 @@ our %config =  (
            }
 
 );	   
+
+
+
+our %credentials;
+require ('./secret.pm');
+
+our $desc_url =  'http://' . $credentials{ host } ;
+$desc_url .=  $credentials{ desc_api } ;
+$desc_url .= '?key=' . $credentials{ key } ;
+
+our $data_url =  'http://' . $credentials{ host } ;
+$data_url .=  $credentials{ data_api } ;
+$data_url .= '?key=' . $credentials{ key } ;
+
+
+
+
 
 1;
