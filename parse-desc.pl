@@ -8,9 +8,14 @@ use Data::Dumper::Simple;
 use LWP::Simple;
 # use Data::Dumper;
 
-# http://${GHOST}/ext/daqdata.cgi?key=22619C862396F373B3FA3E7B276E79C6E563 
+# http://${GHOST}/ext/daqdata.cgi?key=1234567 
 my $data_api = '/daqdata.cgi' ;
+# my $data_api = '/ext/daqdata.cgi' ;
+
 my $desc_api = '/ext/daqdesc.cgi' ;
+
+
+
 # my $http = 'http://';
 
 my $secret_file = 'secret.key';

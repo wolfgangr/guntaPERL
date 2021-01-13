@@ -20,7 +20,9 @@ print Dumper (%config,  %credentials, $desc_url,  $data_url);
 print Dumper ( %config_by_tag) ;
 
 my $data_string = get ( $data_url)  or die " cannot retrieve boiler data $data_url";
-# print $data_string, "\n" ;
+print $data_string, "\n" ;
+
+# die "----------- debug ----------";
 
 my @data = split ( '\n', $data_string ) ;
 printf "data: %s\n", join ( ' : ' , @data );
@@ -34,6 +36,7 @@ for my $key (sort numeric_sort   keys %config) {
 }
 
 print "\n" ;
+die "----------- debug ----------";
 
 # map all mnemonic tags from %config to array
 my @check_select = map $config{ $_}->{ tag } , (sort numeric_sort   keys %config) ;
