@@ -10,7 +10,7 @@ use Data::Dumper::Simple;
 use LWP::Simple;
 
 
-our %config;
+our (%config, %selectors);
 our ($desc_url, $data_url);
 our %credentials;
 require ('./config.pm');
@@ -48,8 +48,8 @@ for my $key (sort numeric_sort   keys %config) {
 
 print "\n" ;
 
-
-print join ' ', map $config{ $_}->{ tag } , (sort numeric_sort   keys %config) ;
+my @check_select = map $config{ $_}->{ tag } , (sort numeric_sort   keys %config) ;
+print join ' ', @check_select ; 
 
 print "\n" ;
 
