@@ -1,0 +1,464 @@
+{
+  '3' => {
+           'name' => 'Kesseltemperatur',
+           'id' => 3,
+           'unit' => "\x{c2}\x{b0}C",
+           'type' => 'float'
+         },
+  '10' => {
+            'name' => 'Puffer T5',
+            'id' => 10,
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C"
+          },
+  '13' => {
+            'id' => 13,
+            'name' => 'Puffer T6',
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C"
+          },
+  '15' => {
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float',
+            'id' => 15,
+            'name' => 'Puffer T7'
+          },
+  '17' => {
+            'unit' => '%',
+            'type' => 'integer',
+            'id' => 17,
+            'name' => 'Pufferladung'
+          },
+  '18' => {
+            'type' => 'float',
+            'unit' => '%',
+            'name' => 'CO2 Gehalt',
+            'id' => 18
+          },
+  '20' => {
+            'id' => 20,
+            'name' => 'Betriebscode',
+            'unit' => undef,
+            'type' => 'integer'
+          },
+  '22' => {
+            'id' => 22,
+            'name' => 'Vorlauf Ist 0',
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C"
+          },
+  '23' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'id' => 23,
+            'name' => 'Aussentemperatur'
+          },
+  '24' => {
+            'name' => 'Puffer oben',
+            'id' => 24,
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C"
+          },
+  '25' => {
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float',
+            'id' => 25,
+            'name' => 'Puffer unten'
+          },
+  '26' => {
+            'type' => 'boolean',
+            'unit' => undef,
+            'id' => 26,
+            'name' => 'Pumpe HP0'
+          },
+  '27' => {
+            'id' => 27,
+            'name' => 'Warmwasser 0',
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C"
+          },
+  '28' => {
+            'type' => 'boolean',
+            'unit' => undef,
+            'name' => 'P Warmwasser 0',
+            'id' => 28
+          },
+  '29' => {
+            'name' => 'Warmwasser 1',
+            'id' => 29,
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '30' => {
+            'id' => 30,
+            'name' => 'P Warmwasser 1',
+            'type' => 'boolean',
+            'unit' => undef
+          },
+  '31' => {
+            'id' => 31,
+            'name' => 'Warmwasser 2',
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '32' => {
+            'unit' => undef,
+            'type' => 'boolean',
+            'name' => 'P Warmwasser 2',
+            'id' => 32
+          },
+  '33' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'id' => 33,
+            'name' => 'Raumtemp. HK 0'
+          },
+  '34' => {
+            'name' => 'Pumpe HK 0',
+            'id' => 34,
+            'unit' => undef,
+            'type' => 'boolean'
+          },
+  '35' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'id' => 35,
+            'name' => 'Raumtemp. HK 1'
+          },
+  '37' => {
+            'id' => 37,
+            'name' => 'Vorlauf Ist 1',
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '38' => {
+            'unit' => undef,
+            'type' => 'boolean',
+            'id' => 38,
+            'name' => 'Pumpe HK 1'
+          },
+  '40' => {
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float',
+            'id' => 40,
+            'name' => 'Raumtemp. HK 2'
+          },
+  '42' => {
+            'name' => 'Vorlauf Ist 2',
+            'id' => 42,
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '43' => {
+            'unit' => undef,
+            'type' => 'boolean',
+            'name' => 'Pumpe HK 2',
+            'id' => 43
+          },
+  '45' => {
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float',
+            'id' => 45,
+            'name' => 'Raumtemp. HK 3'
+          },
+  '46' => {
+            'name' => 'Pumpe HK 3',
+            'id' => 46,
+            'unit' => undef,
+            'type' => 'boolean'
+          },
+  '47' => {
+            'id' => 47,
+            'name' => 'Raumtemp. HK 4',
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '49' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'id' => 49,
+            'name' => 'Vorlauf Ist 4'
+          },
+  '50' => {
+            'type' => 'boolean',
+            'unit' => undef,
+            'id' => 50,
+            'name' => 'Pumpe HK 4'
+          },
+  '52' => {
+            'id' => 52,
+            'name' => 'Raumtemp. HK 5',
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '54' => {
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float',
+            'name' => 'Vorlauf Ist 5',
+            'id' => 54
+          },
+  '55' => {
+            'id' => 55,
+            'name' => 'Pumpe HK 5',
+            'unit' => undef,
+            'type' => 'boolean'
+          },
+  '57' => {
+            'name' => 'Raumtemp. HK 6',
+            'id' => 57,
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '58' => {
+            'name' => 'Pumpe HK 6',
+            'id' => 58,
+            'unit' => undef,
+            'type' => 'boolean'
+          },
+  '59' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'name' => 'Raumtemp. HK 7',
+            'id' => 59
+          },
+  '61' => {
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float',
+            'id' => 61,
+            'name' => 'Vorlauf Ist 7'
+          },
+  '62' => {
+            'unit' => undef,
+            'type' => 'boolean',
+            'id' => 62,
+            'name' => 'Pumpe HK 7'
+          },
+  '64' => {
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float',
+            'name' => 'Raumtemp. HK 8',
+            'id' => 64
+          },
+  '66' => {
+            'id' => 66,
+            'name' => 'Vorlauf Ist 8',
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C"
+          },
+  '67' => {
+            'unit' => undef,
+            'type' => 'boolean',
+            'name' => 'Pumpe HK 8',
+            'id' => 67
+          },
+  '71' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'name' => 'Vorlauf Ist 3',
+            'id' => 71
+          },
+  '73' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'name' => 'Vorlauf Ist 6',
+            'id' => 73
+          },
+  '77' => {
+            'unit' => undef,
+            'type' => 'boolean',
+            'id' => 77,
+            'name' => 'Kesselfreigabe'
+          },
+  '78' => {
+            'name' => 'Betrieb',
+            'id' => 78,
+            'type' => 'string',
+            'unit' => undef
+          },
+  '79' => {
+            'unit' => undef,
+            'type' => 'string',
+            'id' => 79,
+            'name' => 'Programm'
+          },
+  '80' => {
+            'type' => 'string',
+            'unit' => undef,
+            'name' => 'Progamm HK0',
+            'id' => 80
+          },
+  '81' => {
+            'unit' => undef,
+            'type' => 'string',
+            'name' => 'Progamm HK1',
+            'id' => 81
+          },
+  '82' => {
+            'type' => 'string',
+            'unit' => undef,
+            'name' => 'Progamm HK2',
+            'id' => 82
+          },
+  '83' => {
+            'id' => 83,
+            'name' => 'Progamm HK3',
+            'type' => 'string',
+            'unit' => undef
+          },
+  '84' => {
+            'name' => 'Progamm HK4',
+            'id' => 84,
+            'type' => 'string',
+            'unit' => undef
+          },
+  '85' => {
+            'id' => 85,
+            'name' => 'Progamm HK5',
+            'unit' => undef,
+            'type' => 'string'
+          },
+  '86' => {
+            'name' => 'Progamm HK6',
+            'id' => 86,
+            'unit' => undef,
+            'type' => 'string'
+          },
+  '87' => {
+            'name' => 'Progamm HK7',
+            'id' => 87,
+            'unit' => undef,
+            'type' => 'string'
+          },
+  '88' => {
+            'type' => 'string',
+            'unit' => undef,
+            'id' => 88,
+            'name' => 'Progamm HK8'
+          },
+  '89' => {
+            'id' => 89,
+            'name' => 'Puffer oben 0',
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '90' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'name' => 'Puffer unten 0',
+            'id' => 90
+          },
+  '91' => {
+            'name' => 'Puffer oben 1',
+            'id' => 91,
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C"
+          },
+  '92' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'id' => 92,
+            'name' => 'Puffer unten 1'
+          },
+  '93' => {
+            'id' => 93,
+            'name' => 'Puffer oben 2',
+            'unit' => "\x{c2}\x{b0}C",
+            'type' => 'float'
+          },
+  '94' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'name' => 'Puffer unten 2',
+            'id' => 94
+          },
+  '95' => {
+            'type' => 'float',
+            'unit' => '%',
+            'name' => 'Leistung',
+            'id' => 95
+          },
+  '98' => {
+            'type' => 'float',
+            'unit' => "\x{c2}\x{b0}C",
+            'id' => 98,
+            'name' => 'Zusatzwarmw. 0'
+          },
+  '99' => {
+            'unit' => undef,
+            'type' => 'boolean',
+            'name' => 'P Zusatzwarmw. 0',
+            'id' => 99
+          },
+  '100' => {
+             'name' => 'Zusatzwarmw. 1',
+             'id' => 100,
+             'unit' => "\x{c2}\x{b0}C",
+             'type' => 'float'
+           },
+  '101' => {
+             'id' => 101,
+             'name' => 'P Zusatzwarmw. 1',
+             'unit' => undef,
+             'type' => 'boolean'
+           },
+  '102' => {
+             'id' => 102,
+             'name' => 'Zusatzwarmw. 2',
+             'unit' => "\x{c2}\x{b0}C",
+             'type' => 'float'
+           },
+  '103' => {
+             'id' => 103,
+             'name' => 'P Zusatzwarmw. 2',
+             'unit' => undef,
+             'type' => 'boolean'
+           },
+  '104' => {
+             'unit' => undef,
+             'type' => 'integer',
+             'name' => 'Serial',
+             'id' => 104
+           },
+  '106' => {
+             'id' => 106,
+             'name' => 'Betriebszeit',
+             'unit' => 'h',
+             'type' => 'integer'
+           },
+  '107' => {
+             'unit' => 'd',
+             'type' => 'integer',
+             'id' => 107,
+             'name' => 'Servicezeit'
+           },
+  '108' => {
+             'id' => 108,
+             'name' => 'Asche leeren in',
+             'type' => 'integer',
+             'unit' => 'h'
+           },
+  '109' => {
+             'type' => 'boolean',
+             'unit' => undef,
+             'name' => 'Fernpumpe 0',
+             'id' => 109
+           },
+  '110' => {
+             'unit' => undef,
+             'type' => 'boolean',
+             'id' => 110,
+             'name' => 'Fernpumpe 1'
+           },
+  '111' => {
+             'type' => 'boolean',
+             'unit' => undef,
+             'id' => 111,
+             'name' => 'Fernpumpe 2'
+           },
+  '116' => {
+             'id' => 116,
+             'name' => "Brennstoffz\x{e4}hler",
+             'type' => 'float',
+             'unit' => 'm3'
+           }
+}

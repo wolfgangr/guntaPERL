@@ -1,4 +1,5 @@
 secret.key
 *.log
 *.swp
+*.tmp
 daqd???.cgi?key=*3*
