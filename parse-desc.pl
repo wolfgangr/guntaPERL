@@ -43,6 +43,8 @@ print $desc, "\n" ;
 print $data, "\n" ;
 
 my $decoded = JSON::XS::decode_json($desc);
+
+# my $decoded =  JSON::XS->new->utf8->decode($desc);
 # my $decoded = JSON::XS::get_ascii($desc);
 
 # my $decoder = new JSON::XS->new;
@@ -82,13 +84,20 @@ for $dat_row (0 .. $#dat_ary ) {
 	next if ($dat_item == -20 ) ;
 	next if ($dat_item == -100 ) ;
 	next if ($dat_item == -9 ) ;
-
+	
 	my $name = $$di{ name};
 	$name =~ s/\x{e4}/ä/ ;
+
+	next if $name =~ /.*HK\s*[0,3-8]$/ ;
+	next if $name =~ /.*Ist\s*[0,3-8]$/ ;
+	next if $name =~ /Zusatzwarmw/;
+	next if $name =~ /P Warmwasser\s*[1-3]/;
+	next if $name =~ /Fernpumpe/;
+	next if $name =~ /Brennstoffz/;
 
 	my $id = $$di{ id};
 	my $unit = $$di{ unit};
 	$unit =~ s/\x{b0}/°/ ;
 
-	printf "id=%03d, value=%s, unit=%s, type=%s, name=%s\n", $id, $dat_item,  $unit, $$di{ type},$$di{ name}, ;
+	printf "id=%03d, value=%s, unit=%s, type=%s, name=%s\n", $id, $dat_item,  $unit, $$di{ type}, $name, ;
 }
