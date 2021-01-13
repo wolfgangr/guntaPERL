@@ -73,6 +73,11 @@ my @dat_ary = split ( '\n', $data ) ;
 
 print Dumper ( @dat_ary );
 
+# display labeled data to check for valid / intersting data fields
+
+# and keep a filtered subset
+my %filtered_by_id;
+
 for $dat_row (0 .. $#dat_ary ) {
 
 	$dat_item = $dat_ary[ $dat_row ];
@@ -101,10 +106,13 @@ for $dat_row (0 .. $#dat_ary ) {
 	# my $unit = $$di{ unit};
 	# $unit =~ s/\x{b0}/°/ ;
 
-	printf "id=%03d, value=%s, unit=%s, type=%s, name=%s\n", $id, $dat_item,  $$di{ unit} , $$di{ type}, $name, ;
+	printf "id=%03d, valiue=%s, unit=%s, type=%s, name=%s\n", $id, $dat_item,  $$di{ unit} , $$di{ type}, $name, ;
+	$filtered_by_id{ $dat_row } = $di ;
 }
 
+print Dumper ( %filtered_by_id );
 
+dump_to_file ( \%filtered_by_id, 'filtered_by_id.tmp');
 
 exit ;
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
