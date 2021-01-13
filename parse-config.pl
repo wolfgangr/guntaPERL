@@ -25,37 +25,37 @@ my $data_string = get ( $data_url)  or die " cannot retrieve boiler data $data_u
 my @data = split ( '\n', $data_string ) ;
 printf "data: %s\n", join ( ' : ' , @data );
 
+# reuseable for formated output
 my $printf_fmt = "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n";
 
+# list all configured items with current data in it
 for my $key (sort numeric_sort   keys %config) {
 	print_config_item ( $data[ $key ]  , $config{ $key } , $printf_fmt );
-  if (0) {
-	my $item_desc = $config{ $key };
-	my $unit = $item_desc->{ unit } ;
-	$unit = '' unless  defined $unit ;
-
-	my $tag = $item_desc->{ tag } ;
-	$tag = '' unless  defined $tag ;
-
-
-	# print $key, ' - ' ;
-	printf "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n",
-		$item_desc->{ id } ,
-		$tag, 
-		$data[ $key ] ,
-		$unit ,			# $item_desc->{ unit } ,
-		$item_desc->{ type } ,
-		$item_desc->{ name } ,
-		;
-  }
 }
 
 print "\n" ;
 
+# map all mnemonic tags from %config to array
 my @check_select = map $config{ $_}->{ tag } , (sort numeric_sort   keys %config) ;
 print join ' ', @check_select ; 
+print  "\n\n" ;
 
+# cycle over selection, print human readable values and a list of missin tags
 
+# print Dumper (%selectors) ;
+
+for my $sl (sort keys %selectors ) {
+	my @list = @{$selectors{$sl}};
+	print "selector $sl:  \n";
+	print " - includes: ", join (' ', @list) , "\n";
+
+	# cycle over tags and print
+	for my $s_tag (@list) {
+		my $key = $config_by_tag{ $s_tag  }->{ id  } ;
+		print_config_item ( $data[ $key ]  , $config{ $key } , $printf_fmt );
+	}
+	print "\n" ;
+}
 
 print "\n" ;
 
