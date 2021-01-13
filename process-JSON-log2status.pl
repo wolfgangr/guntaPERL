@@ -28,6 +28,9 @@ my $filename = shift  @ARGV or die "usage: $0 filename-log";
 
 open (my $FILE, '<', $filename) or die "cannot open $filename";
 
+# i want to learn about status behaviour
+my $laststatus;
+my %status_analyzer;
 
 while (<$FILE>) {
 	# my ($dt, $vals) = $_ =~   /^\[(.*)\];\[(.*)\]$/ ;
@@ -64,7 +67,23 @@ while (<$FILE>) {
 	# print "\n";
 	### printf " at time %s = %011d found %d data fields \n", $dt, $unixtime, scalar @values ;
 
-	my @taglist = @{$selectors{ rrd }} ;
+	my @taglist = @{$selectors{ status }} ;
+
+	# cycle over selected value pairs
+	for my $tag (@taglist) {
+		my $val = $tv{  $tag } ;
+		printf "%s :   %s  ->  %s  \n", $dt, $tag , $val;
+
+		# keep status changer tag
+		my $status_tag = sprintf "%s-%s", $tag , $val;
+
+		# keep status statistics
+		unless ( defined $status_analyzer{ $status_tag } )  {
+			$status_analyzer{ $status_tag }->{ first  } = $dt;
+		}
+		$status_analyzer{ $status_tag }->{ last  } = $dt;
+		$status_analyzer{ $status_tag }->{ count  }++;
+	}
 	# my $rrd_template = join (':', @taglist);
 	# print $rrd_template , "\n";
 
@@ -78,9 +97,11 @@ while (<$FILE>) {
 	# 	# die "rrd update error";
 	# }
 
-	die "========================== DEBUG ==========================";
+	# die "========================== DEBUG ==========================";
 
 }
+
+print Dumper ( %status_analyzer );
 
 close $FILE;
 
