@@ -1,4 +1,5 @@
 secret.key
+secret.pm
 *.log
 *.swp
 *.tmp

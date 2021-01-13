@@ -11,7 +11,11 @@ use LWP::Simple;
 our %config;
 require ('./config.pm');
 
-print Dumper (%config);
+our %credentials;
+require ('./secret.pm');
+
+
+print Dumper (%config,  %credentials);
 
 exit;
 

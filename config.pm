@@ -1,4 +1,20 @@
-our %config =  (      # {
+# data usage configruation file
+# where does it come from?
+# - 'daqdesc.cgi?key=foobar' from boiler
+# - convert json to perl hash
+# - select only relevant data (manully, depends on boiler installation)
+# - write sorted filtered hash aka 
+# 	filtered_by_id.dump
+# 
+# where does it go to?
+# - switch to full variable syntax
+# - add mnemnonic tags as 'tag' fields
+# - add qw ( some sorted and selected tags) as extraction filters
+# - test
+
+
+
+our %config =  ( 
   '3' => {
            'type' => 'float',
            'id' => 3,
@@ -157,6 +173,5 @@ our %config =  (      # {
            }
 
 );	   
-#} ;
 
 1;
