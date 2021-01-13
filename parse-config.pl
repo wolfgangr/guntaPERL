@@ -30,9 +30,14 @@ for my $key (sort numeric_sort   keys %config) {
 	my $unit = $item_desc->{ unit } ;
 	$unit = '' unless  defined $unit ;
 
+	my $tag = $item_desc->{ tag } ;
+	$tag = '' unless  defined $tag ;
+
+
 	# print $key, ' - ' ;
-	printf "id=%03d, value=%s, unit=%s, type=%s, name=%s\n",
+	printf "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n",
 		$item_desc->{ id } ,
+		$tag, 
 		$data[ $key ] ,
 		$unit ,			# $item_desc->{ unit } ,
 		$item_desc->{ type } ,
