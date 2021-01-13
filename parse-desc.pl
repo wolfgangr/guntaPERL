@@ -2,7 +2,7 @@
 # try to parse daqdesc.cgi from guntamatic heater
 # and to provie meaning and configurability to log data
 
-# use Data::Dumper;
+use Data::Dumper;
 use JSON;
 use Data::Dumper::Simple;
 use LWP::Simple;
@@ -60,11 +60,13 @@ for $di ( @$decoded ) {
 	my $id = $$di{ id};
 	my $unit = $$di{ unit};
 	 $unit =~ s/\x{b0}/°/ ; # crude hack, better understand utf and bretheren....
+	 $$di{ unit} =  $unit;
 	printf "id=%03d, unit=%s, type=%s, name=%s\n", $id,  $unit, $$di{ type},$$di{ name}, ;
 	$desc_by_id{ $id } = $di;
 }
 
 print Dumper ( %desc_by_id );
+dump_to_file ( \%desc_by_id, 'desc_by_id.tmp');
 
 my @dat_ary = split ( '\n', $data ) ;
 
@@ -95,9 +97,37 @@ for $dat_row (0 .. $#dat_ary ) {
 	next if $name =~ /Fernpumpe/;
 	next if $name =~ /Brennstoffz/;
 
-	my $id = $$di{ id};
-	my $unit = $$di{ unit};
-	$unit =~ s/\x{b0}/°/ ;
+	# my $id = $$di{ id};
+	# my $unit = $$di{ unit};
+	# $unit =~ s/\x{b0}/°/ ;
 
-	printf "id=%03d, value=%s, unit=%s, type=%s, name=%s\n", $id, $dat_item,  $unit, $$di{ type}, $name, ;
+	printf "id=%03d, value=%s, unit=%s, type=%s, name=%s\n", $id, $dat_item,  $$di{ unit} , $$di{ type}, $name, ;
 }
+
+
+
+exit ;
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# dump_to_file { \somevar, $filename }
+sub dump_to_file {
+	my ( $varptr, $filename ) = @_; 
+
+
+	open ( $FILE, '>', $filename ) or die "cannot open $filename for writing";
+
+	#if (0) { 
+	{
+		# $Data::Dumper::Sortkeys 
+		local $Data::Dumper::Terse = 1;
+		local $Data::Dumper::Sortkeys = sub { [sort { $a <=> $b } keys %{$_[0]}] };
+		print $FILE Data::Dumper->Dump([$varptr]); 
+	}
+
+	# my $my_dump =  Data::Dumper->new(
+
+	close $FILE;
+
+}
+
+
