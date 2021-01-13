@@ -8,13 +8,19 @@
 # 
 # where does it go to?
 # - switch to full variable syntax
-# - add mnemnonic tags as 'tag' fields
+# - add mnemonic tags as 'tag' fields
 # - add qw ( some sorted and selected tags) as extraction filters
 # - test
 
-
-
-
+our %selectors = (
+  all => qw (T_cald pc_buf CO2 S_op T_out T_buf_top T_buf_bot 
+  		SP_buf0 T_hw0 SP_hw0 T_r1 T_P1 S_P1 T_r2 T_P2 S_P2 
+		enbl opmode prog_main prog_HK1 prog_HK2 pc_pwr 
+		serial op_hr srv_d deash_h),
+  test => qw (T_cald T_buf_top deash_h),
+  rrd => qw( pc_buf pc_pwr CO2 T_cald T_hw0 T_buf_top T_buf_bot T_out T_P1 T_P2 ),
+  status => qw( prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 ),
+) ;
 
 our %config =  ( 
   '3' => {
@@ -158,7 +164,7 @@ our %config =  (
             'name' => 'Progamm HK1'
           },
   '82' => {
-	  tag => 'prog_HK1',
+	  tag => 'prog_HK2',
             'type' => 'string',
             'name' => 'Progamm HK2',
             'unit' => undef,

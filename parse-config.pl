@@ -48,6 +48,13 @@ for my $key (sort numeric_sort   keys %config) {
 
 print "\n" ;
 
+
+print join ' ', map $config{ $_}->{ tag } , (sort numeric_sort   keys %config) ;
+
+print "\n" ;
+
+
+
 exit;
 
 #------------------------------------------
