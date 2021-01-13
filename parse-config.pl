@@ -10,13 +10,14 @@ use Data::Dumper::Simple;
 use LWP::Simple;
 
 
-our (%config, %selectors);
+our (%config, %selectors, %config_by_tag );
 our ($desc_url, $data_url);
 our %credentials;
 require ('./config.pm');
 
 
-print Dumper (%config,  %credentials, $desc_url, $data_url);
+print Dumper (%config,  %credentials, $desc_url,  $data_url);
+print Dumper ( %config_by_tag) ;
 
 my $data_string = get ( $data_url)  or die " cannot retrieve boiler data $data_url";
 # print $data_string, "\n" ;
@@ -50,6 +51,8 @@ print "\n" ;
 
 my @check_select = map $config{ $_}->{ tag } , (sort numeric_sort   keys %config) ;
 print join ' ', @check_select ; 
+
+
 
 print "\n" ;
 

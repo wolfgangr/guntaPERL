@@ -209,6 +209,20 @@ our %config =  (
 );	   
 
 
+our %config_by_tag;
+
+for  (keys  %config) {
+	my $item_p = $config{ $_};
+	my $tag = $item_p->{ tag } ;
+	$config_by_tag{ $tag } = $item_p ;
+}
+
+
+# sort helper
+sub numeric_sort { $a <=> $b  }
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
 our %credentials;
 require ('./secret.pm');
