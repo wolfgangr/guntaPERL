@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/usr/bin/rrdtool create .rrd/temps.rrd --start 01.01.2020 --step 100s  \
+/usr/bin/rrdtool create ./rrd/temps.rrd --start 01.10.2020 --step 100s  \
 DS:pc_buf:GAUGE:5m:0:100 \
 DS:pc_pwr:GAUGE:5m:0:100 \
 DS:CO2:GAUGE:5m:0:100 \
