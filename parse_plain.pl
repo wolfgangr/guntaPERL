@@ -10,6 +10,8 @@ use strict;
 # use JSON;
 use Data::Dumper::Simple;
 use LWP::Simple ; # () ;
+# use utf8;
+use Encode qw( encode decode);
 
 
 our (%config, %selectors, %config_by_tag );
@@ -26,8 +28,13 @@ printf "%s\n" , $data_url_plain ;
 # printf "%s\n" , $data_url_json ;
 
 # LWP::Simple web retrieve
-my $desc = get ( $desc_url_plain)  or die " cannot retrieve $desc_url_plain";
+my $desc_utf8 = get ( $desc_url_plain)  or die " cannot retrieve $desc_url_plain";
 my $data = get ( $data_url_plain)  or die " cannot retrieve $data_url_plain";
+
+# my $desc = utf8::decode($desc_utf);
+# utf8::upgrade($desc);
+my $desc = encode("UTF-8", $desc_utf8);
+
 
 my @data_ary = split ( '\n', $data ) ;
 my @desc_ary = split ( '\n', $desc ) ;
