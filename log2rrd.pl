@@ -29,8 +29,25 @@ if ($debug >=5 ) {
 }
 
 
-my @data = retrieve ( $data_url) or die " cannot retrieve boiler data $data_url";
-print Dumper  (@data) if ($debug >=5 ) ;
+my @values = retrieve ( $data_url) or die " cannot retrieve boiler data $data_url";
+print Dumper  (@values) if ($debug >=5 ) ;
+
+# build tag - value list 
+my %tv;
+
+for my $i (0 .. $#values) {
+	my $val = $values[  $i ] ;
+	my $id = $js_index[ $i ] ;
+		# use only configured values
+	my $tag = $config{ $id }->{ tag } ;
+	next unless defined $tag ;
+		### printf "\t ID=%03d, tag=%s,       \t value=%s  \n", $id,  $tag,  $val;
+
+	$tv{$tag} = numbrify ( $val);
+}
+
+print Dumper  (%tv) if ($debug >=3 ) ;
+
 
 for my $rrd ( sort keys %RRD_list) {
 	my $do_stat = $RRD_list{ $rrd }->{ stat } ;
