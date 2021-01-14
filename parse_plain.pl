@@ -17,7 +17,7 @@ use Encode qw( encode decode);
 our (%config, %selectors, %config_by_tag );
 # our ($desc_url, $data_url);
 # our %credentials;
-# our ( @js_index, %js_rev_index);
+our ( @js_index, %js_rev_index);
 # our ($desc_url_plain, $data_url_plain, $desc_url_json, $data_url_json) ;
 our ($desc_url_plain, $data_url_plain);
 require ('./config.pm');
@@ -65,11 +65,22 @@ for my $i (0 .. $#desc_ary) {
 
 print Dumper ( %config_plain );
 
-print (join ", " , sort numeric_sort (keys %config_plain ))  ;
+my @c_keys_plain = sort numeric_sort (keys %config_plain ) ;
+my @c_keys_json  =  @js_index ;    # sort numeric_sort (keys %config ) ;
+my @c_plain_butnotJ = set_difference( \@c_keys_plain, \@c_keys_json   );
+my @c_json_butnotP  = set_difference( \@c_keys_json , \@c_keys_plain  );
+
+
+print (join ", " , @c_keys_plain)  ;
 print "\n  " ;
 printf "recieved %d lines of data and %d lines of desc of which %d are valid\n", 
 	scalar @data_ary, scalar @desc_ary , scalar keys %config_plain ;
+printf "plain: %d, JSON: %d, plain &! JSON: %d, JSON &! plain: %d\n", 
+	scalar  @c_keys_plain, scalar @c_keys_json, 
+	scalar @c_plain_butnotJ , scalar @c_json_butnotP ;
 
+
+# my @c_plain_keys = sort numeric_sort (keys %config_plain )
 
 exit ;
 
@@ -81,3 +92,18 @@ sub retrieve {
 	my $rsp = encode("UTF-8", $rsp_utf8);
 	return split ( '\n', $rsp ) ;
 }
+
+# https://www.linuxquestions.org/questions/programming-9/how-to-compare-two-lists-arrays-in-perl-636686/#post3128140
+# @rest = set_difference ( \@major, \@minor )
+sub set_difference {
+	my ($major, $minor) = @_;
+	my @A = @$major;
+	my @B = @$minor;
+
+	# no need to understand as long as it works ;-)
+	my @C=grep!${{map{$_,1}@B}}{$_},@A;
+	# my @C=map{!${{map{$_,1}@B}}{$_}&&$_||undef}@A;
+	return @C;
+}
+
+
