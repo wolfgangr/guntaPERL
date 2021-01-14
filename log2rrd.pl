@@ -30,6 +30,8 @@ if ($debug >=5 ) {
 
 
 my @values = retrieve ( $data_url) or die " cannot retrieve boiler data $data_url";
+my $timestamp = time();
+
 print Dumper  (@values) if ($debug >=5 ) ;
 
 # build tag - value list 
@@ -44,7 +46,7 @@ for my $i (0 .. $#values) {
 	next unless defined $tag ;
 		### printf "\t ID=%03d, tag=%s,       \t value=%s  \n", $id,  $tag,  $val;
 
-	my $val = numbrify ( $val, $conf_itm );
+	$val = numbrify ( $val, $conf_itm );
 	$val= 'U' unless defined $val;
 	$tv{$tag} = $val;
 }
@@ -56,19 +58,32 @@ for my $rrd ( sort keys %RRD_list) {
 	my $do_stat = $RRD_list{ $rrd }->{ stat } ;
 	unless (defined $do_stat) { die "config error - missing stat in rrd $rrd " } ;
 
+	# build and check file name
 	my $rrdfile = sprintf $file_tpl, $rrd ;
 
+	unless ( -f $rrdfile ) {
+                printf STDERR "cannot find %s - skipping... \n", $rrdfile ;
+		# next;
+        }
+
+	# build  tag list
 	my @taglist = @{$selectors{ $rrd }} ;
 	unless (@taglist) { die "config error - missing selectors for rrd $rrd " } ;
 	
 	my $rrd_template = join (':', @taglist);
 
-	unless ( -f $rrdfile ) {
-		printf STDERR "cannot find %s - skipping... \n", $rrdfile ;
-		next;
-	}
+        # build  value list
+        my @rrd_values = map { $tv{ $_ }   } @taglist;
+        my $rrd_valstr = join (':', ($timestamp  , @rrd_values) );
+
+	
         if ($debug >=3 ) {
-                printf "updating %s, stat=%d, fields: \n\t%s \n", $rrdfile , $do_stat, $rrd_template;
+                printf "updating %s, stat=%d \n", $rrdfile , $do_stat;
+		printf " - fields: %s \n",  $rrd_template;
+		printf " - values: %s \n", $rrd_valstr;
         } 
+
+	print "\n";
+
 
 }
