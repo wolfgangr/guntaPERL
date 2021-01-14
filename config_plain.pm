@@ -15,6 +15,10 @@ our %selectors = (
   service => [ qw( serial op_hr srv_d deash_h) ],
 ) ;
 
+my @enum_prog_HK = qw ( AUS NORMAL HEIZEN NACHLAUF ABSENKEN ) , 'ABSENKEN BIS...'   ;
+my @enum_prog_main = qw ( AUS NORMAL WARMWASSER HEIZEN ABSENKEN ) , 'ABSENKEN BIS', 'WW Nachl.' , qw( ROSTREIN. HANDBETRIEB  ) ;
+my @enum_opmode = qw ( AUS START ZÜNDUNG REGELUNG NACHLAUF    ) ;
+
 
 our %config =  ( 
   '3' => {
