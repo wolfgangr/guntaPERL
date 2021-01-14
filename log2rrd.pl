@@ -10,11 +10,26 @@ use Data::Dumper::Simple ;
 # use LWP::Simple;
 use RRDs() ;
 # use Cwd  qw (realpath);
-use File::Glob ':bsd_glob';
+# use File::Glob ':bsd_glob';
+use Storable;
+
 
 my $debug = 3;
 
-my $file_tpl = '~/guntamatic/rrd/%s.rrd' ;
+my $homedir = `echo ~`;
+chomp $homedir ;
+
+my $username = `echo \$USER` ;
+chomp $username ;
+
+my $file_tpl =  $homedir .  '/guntamatic/rrd/%s.rrd' ;
+my $status_cache =  $homedir . '/guntamatic/rrd/last_status.pls' ; # keep status between invocations, use "perl Storable"
+my $status_logfile = sprintf '/var/log/%s/guntamatic_status.log', $username  ; 
+
+# $status_cache = bsd_glob($status_cache, GLOB_TILDE | GLOB_ERR );
+# cave: must exist for glob to work....
+# print $status_cache ;
+# die "debug";
 
 our (%config,  %config_by_tag );
 our ($desc_url, $data_url);
@@ -56,6 +71,7 @@ for my $i (0 .. $#values) {
 
 print Dumper  (%tv) if ($debug >=5 ) ;
 
+my $status =  ''; #  $timestamp . ':';
 
 for my $rrd ( sort keys %RRD_list) {
 	print "\n" if ($debug >=3 );
@@ -64,8 +80,9 @@ for my $rrd ( sort keys %RRD_list) {
 	unless (defined $do_stat) { die "config error - missing stat in rrd $rrd " } ;
 
 	# build and check file name
-	my $rel_path =  (sprintf $file_tpl, $rrd ) ;
-	my $rrdfile =  bsd_glob ( $rel_path,  GLOB_TILDE );
+	# my $rel_path =  (sprintf $file_tpl, $rrd ) ;
+	# my $rrdfile =  bsd_glob ( $rel_path,  GLOB_TILDE );
+	my $rrdfile = (sprintf $file_tpl, $rrd ) ;
 
 	# printf( " tpl %s, rrd %s, sprintf %s, ", $file_tpl, $rrd , $rel_path   );
 	# printf( " real: %s \n", $rrdfile );
@@ -104,5 +121,14 @@ for my $rrd ( sort keys %RRD_list) {
 
 	#print "\n" if ($debug >=3 );
 
-
+	if ( $do_stat ) {
+		for my  $i ( 0 .. $#taglist) {
+			$status .= ':' . $taglist[$i] . ':' .   $rrd_values[$i ]; 
+		}
+	}
 }
+
+printf "\nstatus  string:%s\n cache=%s, logfile=%s, \n",  $status, $status_cache, $status_logfile;
+
+
+my $oldstate = $status_cache ;
