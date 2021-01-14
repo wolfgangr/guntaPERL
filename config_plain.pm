@@ -2,7 +2,15 @@
 # 	for plain api in /
 # 	in contrast to the json api in /ext/
 
-
+# tags of rrd, will be used to create filenames,
+# if { stat => 1 } , we might do a status change log
+#
+our %RRD_list = ( 
+       	temps    => { stat => 1 } ,
+	status   => { stat => 0 } ,
+	tempsX   => { stat => 1 } ,
+	statusX  => { stat => 0 } ,
+) ;
 
 our %selectors = (
   json =>    [ qw (T_cald pc_buf CO2 S_op T_out T_buf_top T_buf_bot 
@@ -12,11 +20,12 @@ our %selectors = (
   plain_xtra => [ qw (  pc_exh  pc_vent pc_stok I_stok pc_aug1 I_aug1 
 	  	pc_grt frflp level stb tks1 fault0 fault1 ver 
 		T_ret pc_aug2 I_aug2 ign_vnt ign_ht ) ],
-  test =>   [ qw (T_cald T_buf_top deash_h) ],
-  rrd =>    [ qw( pc_buf pc_pwr CO2 T_cald T_hw0 T_buf_top T_buf_bot T_out T_P1 T_P2 ) ],
-  status => [ qw( prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr) ],
-
-  service => [ qw( serial op_hr srv_d deash_h) ],
+  test =>     [ qw (T_cald T_buf_top deash_h) ],
+  temps  =>   [ qw( pc_buf pc_pwr CO2 T_cald T_hw0 T_buf_top T_buf_bot T_out T_P1 T_P2 ) ],
+  status =>   [ qw( prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr) ],
+  tempsX =>   [ qw(	T_ret pc_exh  pc_vent pc_stok I_stok pc_aug1 I_aug1 pc_grt ) ],
+  statusX =>  [ qw(  fault0 fault1 frflp level stb tks1 pc_ign_vnt ign_ht  ) ],
+  service =>  [ qw( serial op_hr srv_d deash_h) ],
 ) ;
 
 my @enum_prog_HK = qw ( AUS NORMAL HEIZEN NACHLAUF ABSENKEN ) , 'ABSENKEN BIS...'   ;
