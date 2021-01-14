@@ -44,11 +44,31 @@ my @data_ary = retrieve ( $data_url_plain) ;
 my @desc_ary = retrieve ( $desc_url_plain) ;
 
 
-printf "recieved %d lines of data and %d lines of desc \n", scalar @data_ary, scalar @desc_ary ;
+# printf "recieved %d lines of data and %d lines of desc \n", scalar @data_ary, scalar @desc_ary ;
 
+my %config_plain ;
 for my $i (0 .. $#desc_ary) {
 	printf "%03d - %s -  \t %s\n", $i , $data_ary[ $i ], $desc_ary[ $i ] ; 
+
+	my ($name , $unit) = split ( ';', $desc_ary[ $i ] ) ;
+	my %c_item = ( id => $i, unit => $unit, name => $name );
+
+	unless ($name eq 'reserved'  ) {
+		$config_plain{ $i } = \%c_item ;
+	} else {
+		next if ( $data_ary[ $i ] eq ' '  );
+		die " found value for reserved item ";
+	}
+
+	# $config_plain{ $i } = \%c_item ; 
 }
+
+print Dumper ( %config_plain );
+
+print (join ", " , sort numeric_sort (keys %config_plain ))  ;
+print "\n  " ;
+printf "recieved %d lines of data and %d lines of desc of which %d are valid\n", 
+	scalar @data_ary, scalar @desc_ary , scalar keys %config_plain ;
 
 
 exit ;
