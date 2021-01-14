@@ -28,17 +28,21 @@ printf "%s\n" , $data_url_plain ;
 # printf "%s\n" , $data_url_json ;
 
 # LWP::Simple web retrieve
-my $desc_utf8 = get ( $desc_url_plain)  or die " cannot retrieve $desc_url_plain";
-my $data_utf8 = get ( $data_url_plain)  or die " cannot retrieve $data_url_plain";
+# my $desc_utf8 = get ( $desc_url_plain)  or die " cannot retrieve $desc_url_plain";
+# my $data_utf8 = get ( $data_url_plain)  or die " cannot retrieve $data_url_plain";
 
 # my $desc = utf8::decode($desc_utf);
 # utf8::upgrade($desc);
-my $desc = encode("UTF-8", $desc_utf8);
-my $data = encode("UTF-8", $data_utf8);
+# my $desc = encode("UTF-8", $desc_utf8);
+# my $data = encode("UTF-8", $data_utf8);
 
 
-my @data_ary = split ( '\n', $data ) ;
-my @desc_ary = split ( '\n', $desc ) ;
+# my @data_ary = split ( '\n', $data ) ;
+# my @desc_ary = split ( '\n', $desc ) ;
+
+my @data_ary = retrieve ( $data_url_plain) ;
+my @desc_ary = retrieve ( $desc_url_plain) ;
+
 
 printf "recieved %d lines of data and %d lines of desc \n", scalar @data_ary, scalar @desc_ary ;
 
@@ -47,4 +51,13 @@ for my $i (0 .. $#desc_ary) {
 }
 
 
+exit ;
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# @values = retrieve ($url) 
+sub retrieve {
+	my $url = shift;
+	my $rsp_utf8 =  get ( $url );
+	my $rsp = encode("UTF-8", $desc_utf8);
+	return split ( '\n', $data ) ;
+}
