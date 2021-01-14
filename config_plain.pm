@@ -6,10 +6,10 @@
 # if { stat => 1 } , we might do a status change log
 #
 our %RRD_list = ( 
-       	temps    => { stat => 1 } ,
-	status   => { stat => 0 } ,
-	tempsX   => { stat => 1 } ,
-	statusX  => { stat => 0 } ,
+       	temps    => { stat => 0 } ,
+	status   => { stat => 1 } ,
+	tempsX   => { stat => 0 } ,
+	statusX  => { stat => 1 } ,
 ) ;
 
 our %selectors = (
