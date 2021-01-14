@@ -242,6 +242,7 @@ sub numeric_sort { $a <=> $b  }
 our %credentials;
 require ('./secret.pm');
 
+# this is not consistent
 our $desc_url =  'http://' . $credentials{ host } ;
 $desc_url .=  $credentials{ desc_api } ;
 $desc_url .= '?key=' . $credentials{ key } ;
@@ -250,6 +251,13 @@ our $data_url =  'http://' . $credentials{ host } ;
 $data_url .=  $credentials{ data_api } ;
 $data_url .= '?key=' . $credentials{ key } ;
 
+# there are two different apis
+
+my $urlator = sprintf "http://%s\%s?key=%s", $credentials{ host }, $credentials{ key } ;
+our $data_url_json = sprintf $urlator, '/ext/daqdata.cgi' ;
+our $desc_url_json = sprintf $urlator, '/ext/daqdesc.cgi' ;
+our $data_url_plain = sprintf $urlator, '/daqdata.cgi' ;
+our $desc_url_plain = sprintf $urlator, '/daqdesc.cgi' ;
 
 
 
