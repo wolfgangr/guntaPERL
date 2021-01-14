@@ -36,7 +36,9 @@ while (<$FILE>) {
 	#  date -d'2020-12-31 23:05:02+00:00' +%s
 	my $unixtime = `date -d'$dt' +%s`;
 	chomp $unixtime;
-	
+
+	next unless $vals;
+
 	# manually or JSON decoder?
 	
 	# my @values = split ( ',' ,  $vals);
@@ -58,7 +60,7 @@ while (<$FILE>) {
 
 		$tv{$tag} = $val;
 	}
-	print Dumper ( %tv);
+	# print Dumper ( %tv);
 
 	# print "  -> found values: ", scalar @values ;
 	# print "\n";
@@ -66,11 +68,11 @@ while (<$FILE>) {
 
 	my @taglist = @{$selectors{ rrd }} ;
 	my $rrd_template = join (':', @taglist);
-	print $rrd_template , "\n";
+	# print $rrd_template , "\n";
 
 	my @rrd_values = map { $tv{ $_ }   } @taglist;
 	my $rrd_values = join (':', $unixtime  , @rrd_values);
-	print $rrd_values , "\n";
+	# print $rrd_values , "\n";
 
 	RRDs::update($rrd_temps, '--template', $rrd_template, $rrd_values);
 	if ( RRDs::error ) {
