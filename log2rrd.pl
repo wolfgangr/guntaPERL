@@ -64,7 +64,8 @@ for my $rrd ( sort keys %RRD_list) {
 	# build and check file name
 	my $rrdfile = sprintf $file_tpl, $rrd ;
 
-	unless ( -f $rrdfile ) {
+	# unless ( -f $rrdfile ) {
+	if ( 0 ) {
                 printf STDERR "cannot find %s - skipping... \n", $rrdfile ;
 		next;
         }
@@ -86,6 +87,7 @@ for my $rrd ( sort keys %RRD_list) {
 		printf " - values: %s \n", $rrd_valstr;
         } 
 
+	next unless ( -f $rrdfile );
 	RRDs::update($rrdfile, '--template', $rrd_template, $rrd_valstr);
 	if ( RRDs::error ) {
 		printf STDERR ( "error updating RRD %s: %s \n", $rrdfile , RRDs::error ) ;
