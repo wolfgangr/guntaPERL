@@ -226,6 +226,10 @@ for (0 .. $#js_index) {
 	$js_rev_index{ $js_index[ $_ ] } =  $_ ;
 }
 
+our %plain_rev_index;
+for (0 .. $#plain_index) {
+        $plain_rev_index{ $plain_index[ $_ ] } =  $_ ;
+}
 
 
 our %config_by_tag;
