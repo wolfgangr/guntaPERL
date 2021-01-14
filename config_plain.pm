@@ -18,6 +18,7 @@ our %selectors = (
 my @enum_prog_HK = qw ( AUS NORMAL HEIZEN NACHLAUF ABSENKEN ) , 'ABSENKEN BIS...'   ;
 my @enum_prog_main = qw ( AUS NORMAL WARMWASSER HEIZEN ABSENKEN ) , 'ABSENKEN BIS', 'WW Nachl.' , qw( ROSTREIN. HANDBETRIEB  ) ;
 my @enum_opmode = qw ( AUS START ZÜNDUNG REGELUNG NACHLAUF    ) ;
+our @enum_boolean = qw ( AUS EIN ) ;
 
 
 our %config =  ( 
@@ -30,21 +31,25 @@ our %config =  (
            'JSON' => 1
          },
   '4' => {
+	  tag => 'pc_exh ', 
            'id' => 4,
            'name' => 'Rauchgasauslastung',
            'unit' => '%'
          },
   '7' => {
+	  tag => 'pc_vent',
            'name' => 'Saugzuggebläse',
            'id' => 7,
            'unit' => '%'
          },
   '8' => {
+	  tag => 'pc_stok',
            'unit' => '%',
            'id' => 8,
            'name' => 'Stoker'
          },
   '9' => {
+	  tag => 'I_stok',
            'unit' => 'A',
            'name' => 'I stock.',
            'id' => 9
@@ -56,11 +61,13 @@ our %config =  (
             'unit' => '°C'
           },
   '11' => {
+	  tag => 'pc_aug1',
             'unit' => '%',
             'name' => 'Austragung: 1',
             'id' => 11
           },
   '12' => {
+	  tag => 'I_aug1',
             'name' => 'I Austragung 1',
             'id' => 12,
             'unit' => 'A'
@@ -78,6 +85,7 @@ our %config =  (
             'id' => 15
           },
   '16' => {
+	  tag => 'pc_grt',
             'id' => 16,
             'name' => 'Rost',
             'unit' => '%'
@@ -341,6 +349,8 @@ our %config =  (
             'id' => 67
           },
   '70' => {
+	  tag => 'frflp',
+	  type => 'boolean',
             'unit' => '',
             'id' => 70,
             'name' => 'Brandschutzklappe'
@@ -358,16 +368,22 @@ our %config =  (
             'unit' => '°C'
           },
   '74' => {
+	  tag => 'level',
+	  type => 'boolean',
             'unit' => '',
             'name' => 'Füllstand',
             'id' => 74
           },
   '75' => {
+	  tag => 'stb',
+	  type => 'boolean',
             'unit' => '',
             'name' => 'STB',
             'id' => 75
           },
   '76' => {
+	  tag => 'tks1',
+	  type => 'boolean',
             'name' => 'TKS 1',
             'id' => 76,
             'unit' => ''
@@ -383,7 +399,8 @@ our %config =  (
   '78' => {
             'id' => 78,
             'tag' => 'opmode',
-            'type' => 'string',
+            'type' => 'istring',
+	    'enum' => [ @enum_opmode  ] ,
             'name' => 'Betrieb',
             'unit' => undef,
             'JSON' => 1
@@ -393,6 +410,7 @@ our %config =  (
             'JSON' => 1,
             'name' => 'Programm',
             'type' => 'string',
+	    'enum' => [ @enum_prog_main  ] ,
             'tag' => 'prog_main',
             'id' => 79
           },
@@ -405,6 +423,7 @@ our %config =  (
   '81' => {
             'name' => 'Progamm HK1',
             'type' => 'string',
+	    'enum' => [ @enum_prog_HK ] ,
             'tag' => 'prog_HK1',
             'id' => 81,
             'unit' => undef,
@@ -415,6 +434,7 @@ our %config =  (
             'id' => 82,
             'name' => 'Progamm HK2',
             'type' => 'string',
+	    'enum' => [ @enum_prog_HK ] ,
             'JSON' => 1,
             'unit' => undef
           },
@@ -499,11 +519,13 @@ our %config =  (
             'unit' => '%'
           },
   '96' => {
+	  tag => 'fault0',
             'name' => 'Störung 0',
             'id' => 96,
             'unit' => ''
           },
   '97' => {
+	  tag => 'fault1',
             'unit' => '',
             'id' => 97,
             'name' => 'Störung 1'
@@ -553,6 +575,7 @@ our %config =  (
              'tag' => 'serial'
            },
   '105' => {
+	  tag => 'ver',
              'unit' => '',
              'id' => 105,
              'name' => 'Version'
@@ -600,16 +623,19 @@ our %config =  (
              'unit' => ''
            },
   '112' => {
+	  tag => 'T_ret',
              'unit' => '°C',
              'id' => 112,
              'name' => 'Rücklauftemp.'
            },
   '114' => {
+	  tag => 'pc_aug2',
              'id' => 114,
              'name' => 'Austragung: 2',
              'unit' => '%'
            },
   '115' => {
+	  tag => 'I_aug2',
              'id' => 115,
              'name' => 'I Austragung 2',
              'unit' => 'A'
@@ -621,11 +647,13 @@ our %config =  (
              'JSON' => 0
            },
   '117' => {
+	  tag => 'ign_vnt',
              'name' => 'Zündgebläse',
              'id' => 117,
              'unit' => ''
            },
   '118' => {
+	  tag => 'ign_ht',
              'id' => 118,
              'name' => 'Zündheizung',
              'unit' => ''

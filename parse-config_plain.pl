@@ -33,8 +33,17 @@ my $printf_fmt = "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n";
 for my $key (sort numeric_sort   keys %config) {
 	print_config_item ( $data[ $key ]  , $config{ $key } , $printf_fmt );
 }
-
 print "\n" ;
+
+our @plain_xtra_index;
+print "just the extra items:\n" ;
+for  my $key (@plain_xtra_index) {
+        print_config_item ( $data[ $key ]  , $config{ $key } , $printf_fmt );
+}
+print "\n" ;
+
+
+
 die "----------- debug ----------";
 
 
