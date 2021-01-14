@@ -18,6 +18,7 @@ our (%config, %selectors, %config_by_tag );
 # our ($desc_url, $data_url);
 # our %credentials;
 our ( @js_index, %js_rev_index);
+our (@plain_index, @plain_xtra_index);
 # our ($desc_url_plain, $data_url_plain, $desc_url_json, $data_url_json) ;
 our ($desc_url_plain, $data_url_plain);
 require ('./config.pm');
@@ -72,7 +73,10 @@ my @c_json_butnotP  = set_difference( \@c_keys_json , \@c_keys_plain  );
 
 
 print (join ", " , @c_keys_plain)  ;
-print "\n  " ;
+print "\n" ;
+print (join ", " , @plain_index)  ;
+print "\n" ;
+
 printf "recieved %d lines of data and %d lines of desc of which %d are valid\n", 
 	scalar @data_ary, scalar @desc_ary , scalar keys %config_plain ;
 printf "plain: %d, JSON: %d, plain &! JSON: %d, JSON &! plain: %d\n", 
@@ -80,7 +84,11 @@ printf "plain: %d, JSON: %d, plain &! JSON: %d, JSON &! plain: %d\n",
 	scalar @c_plain_butnotJ , scalar @c_json_butnotP ;
 
 print (join ", " , @c_plain_butnotJ)  ;
-print "\n  " ;
+print "\n" ;
+
+for my $i (@c_plain_butnotJ) {
+	printf "%03d - %s -  \t %s\n", $i , $data_ary[ $i ], $desc_ary[ $i ] ;
+}
 
 
 # my @c_plain_keys = sort numeric_sort (keys %config_plain )

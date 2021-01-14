@@ -216,6 +216,10 @@ our @js_index  =  qw( 3 10 13 15 17 18 20 22 23 24 25 26 27 28 29 30
 	61 62 64 66 67 71 73 77 78 79 80 81 82 83 84 85 86 87 88 89 90 
 	91 92 93 94 95 98 99 100 101 102 103 104 106 107 108 109 110 111 116 );
 
+our @plain_xtra_index = (4, 7, 8, 9, 11, 12, 16, 70, 74, 75, 76, 96, 97, 105, 112, 114, 115, 117, 118) ;
+our @plain_index = sort numeric_sort ( @js_index, @plain_xtra_index );
+
+
 # and the reverse - as hash:
 our %js_rev_index;
 for (0 .. $#js_index) {
