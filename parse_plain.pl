@@ -79,6 +79,9 @@ printf "plain: %d, JSON: %d, plain &! JSON: %d, JSON &! plain: %d\n",
 	scalar  @c_keys_plain, scalar @c_keys_json, 
 	scalar @c_plain_butnotJ , scalar @c_json_butnotP ;
 
+print (join ", " , @c_plain_butnotJ)  ;
+print "\n  " ;
+
 
 # my @c_plain_keys = sort numeric_sort (keys %config_plain )
 
