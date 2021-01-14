@@ -33,3 +33,10 @@ my @data_ary = split ( '\n', $data ) ;
 my @desc_ary = split ( '\n', $desc ) ;
 
 printf "recieved %d lines of data and %d lines of desc \n", scalar @data_ary, scalar @desc_ary ;
+
+for my $i (0 .. $#desc_ary) {
+	printf "%03d - %s -  \t %s\n", $i , $data_ary[ $i ], $desc_ary[ $i ] ; 
+}
+
+
+
