@@ -29,11 +29,12 @@ printf "%s\n" , $data_url_plain ;
 
 # LWP::Simple web retrieve
 my $desc_utf8 = get ( $desc_url_plain)  or die " cannot retrieve $desc_url_plain";
-my $data = get ( $data_url_plain)  or die " cannot retrieve $data_url_plain";
+my $data_utf8 = get ( $data_url_plain)  or die " cannot retrieve $data_url_plain";
 
 # my $desc = utf8::decode($desc_utf);
 # utf8::upgrade($desc);
 my $desc = encode("UTF-8", $desc_utf8);
+my $data = encode("UTF-8", $data_utf8);
 
 
 my @data_ary = split ( '\n', $data ) ;
