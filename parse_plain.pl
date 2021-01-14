@@ -58,6 +58,6 @@ exit ;
 sub retrieve {
 	my $url = shift;
 	my $rsp_utf8 =  get ( $url );
-	my $rsp = encode("UTF-8", $desc_utf8);
-	return split ( '\n', $data ) ;
+	my $rsp = encode("UTF-8", $rsp_utf8);
+	return split ( '\n', $rsp ) ;
 }
