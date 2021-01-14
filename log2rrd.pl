@@ -37,13 +37,16 @@ my %tv;
 
 for my $i (0 .. $#values) {
 	my $val = $values[  $i ] ;
-	my $id = $js_index[ $i ] ;
+	my $conf_itm = $config{ $i }   ;
+	next unless defined $conf_itm;
 		# use only configured values
-	my $tag = $config{ $id }->{ tag } ;
+	my $tag = $conf_itm->{ tag } ;
 	next unless defined $tag ;
 		### printf "\t ID=%03d, tag=%s,       \t value=%s  \n", $id,  $tag,  $val;
 
-	$tv{$tag} = numbrify ( $val);
+	my $val = numbrify ( $val, $conf_itm );
+	$val= 'U' unless defined $val;
+	$tv{$tag} = $val;
 }
 
 print Dumper  (%tv) if ($debug >=3 ) ;
