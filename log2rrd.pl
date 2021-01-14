@@ -9,10 +9,16 @@ use strict;
 use Data::Dumper::Simple ;
 # use LWP::Simple;
 use RRDs() ;
+# use Cwd  qw (realpath);
+use File::Glob ':bsd_glob';
 
 my $debug = 3;
 
-my $file_tpl = '/home/wrosner/guntamatic/rrd/%s.rrd';
+# my $file_tpl = '/home/wrosner/guntamatic/rrd/%s.rrd';
+my $file_tpl = '~/guntamatic/rrd/%s.rrd' ;
+# $file_tpl = Cwd::realpath( '~/guntamatic/rrd/%s.rrd' );
+# print $file_tpl;
+# die "debug";
 
 our (%config,  %config_by_tag );
 our ($desc_url, $data_url);
@@ -62,8 +68,13 @@ for my $rrd ( sort keys %RRD_list) {
 	unless (defined $do_stat) { die "config error - missing stat in rrd $rrd " } ;
 
 	# build and check file name
-	my $rrdfile = sprintf $file_tpl, $rrd ;
+	my $rel_path =  (sprintf $file_tpl, $rrd ) ;
+	# my $rrdfile = glob ($rel_path);
+	my $rrdfile =  bsd_glob ( $rel_path,  GLOB_TILDE );
 
+	printf( " tpl %s, rrd %s, sprintf %s, ", $file_tpl, $rrd , $rel_path   );
+	printf( " real: %s \n", $rrdfile );
+	# die "debug";
 	# unless ( -f $rrdfile ) {
 	if ( 0 ) {
                 printf STDERR "cannot find %s - skipping... \n", $rrdfile ;
