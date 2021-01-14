@@ -31,17 +31,22 @@ my $printf_fmt = "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n";
 
 # list all configured items with current data in it
 for my $key (sort numeric_sort   keys %config) {
-	print_config_item ( $data[ $key ]  , $config{ $key } , $printf_fmt );
+	my $di = numbrify ( $data[ $key ]  , $config{ $key } );
+	print_config_item ( $di  , $config{ $key } , $printf_fmt );
 }
 print "\n" ;
 
 our @plain_xtra_index;
 print "just the extra items:\n" ;
 for  my $key (@plain_xtra_index) {
-        print_config_item ( $data[ $key ]  , $config{ $key } , $printf_fmt );
+        print $config{ $key }->{ tag } , ' ';
 }
 print "\n" ;
 
+for  my $key (@plain_xtra_index) {
+        print_config_item ( $data[ $key ]  , $config{ $key } , $printf_fmt );
+}
+print "\n" ;
 
 
 die "----------- debug ----------";

@@ -9,9 +9,13 @@ our %selectors = (
   		SP_buf0 T_hw0 SP_hw0 T_r1 T_P1 S_P1 T_r2 T_P2 S_P2 
 		enbl opmode prog_main prog_HK1 prog_HK2 pc_pwr 
 		serial op_hr srv_d deash_h) ],
+  plain_xtra => [ qw (  pc_exh  pc_vent pc_stok I_stok pc_aug1 I_aug1 
+	  	pc_grt frflp level stb tks1 fault0 fault1 ver 
+		T_ret pc_aug2 I_aug2 ign_vnt ign_ht ) ],
   test =>   [ qw (T_cald T_buf_top deash_h) ],
   rrd =>    [ qw( pc_buf pc_pwr CO2 T_cald T_hw0 T_buf_top T_buf_bot T_out T_P1 T_P2 ) ],
   status => [ qw( prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr) ],
+
   service => [ qw( serial op_hr srv_d deash_h) ],
 ) ;
 
@@ -399,7 +403,7 @@ our %config =  (
   '78' => {
             'id' => 78,
             'tag' => 'opmode',
-            'type' => 'istring',
+            'type' => 'string',
 	    'enum' => [ @enum_opmode  ] ,
             'name' => 'Betrieb',
             'unit' => undef,
@@ -648,12 +652,14 @@ our %config =  (
            },
   '117' => {
 	  tag => 'ign_vnt',
+	  'type' => 'boolean',
              'name' => 'Zündgebläse',
              'id' => 117,
              'unit' => ''
            },
   '118' => {
 	  tag => 'ign_ht',
+	  'type' => 'boolean',
              'id' => 118,
              'name' => 'Zündheizung',
              'unit' => ''
