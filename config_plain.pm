@@ -632,7 +632,7 @@ our %config =  (
 
 # reverse index
 our %config_by_tag;
-for  (keys  %coinfig) {
+for  (keys  %config) {
 	my $item_p = $config{ $_};
 	my $tag = $item_p->{ tag } ;
 	next unless defined $tag ;
@@ -657,6 +657,7 @@ my $urlator = sprintf "http://%s%%s?key=%s", $credentials{ host }, $credentials{
 # our $desc_url_json = sprintf $urlator, '/ext/daqdesc.cgi' ;
 our $data_url = my  $data_url_plain = sprintf $urlator, '/daqdata.cgi' ;
 our $desc_url = my  $desc_url_plain = sprintf $urlator, '/daqdesc.cgi' ;
+
 
 
 1;
