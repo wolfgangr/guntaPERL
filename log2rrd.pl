@@ -6,8 +6,9 @@ use warnings;
 use strict;
 
 
-use Data::Dumper::Simple;
-use LWP::Simple;
+use Data::Dumper::Simple ;
+# use LWP::Simple;
+use RRDs() ;
 
 my $debug = 3;
 
@@ -51,10 +52,12 @@ for my $i (0 .. $#values) {
 	$tv{$tag} = $val;
 }
 
-print Dumper  (%tv) if ($debug >=3 ) ;
+print Dumper  (%tv) if ($debug >=5 ) ;
 
 
 for my $rrd ( sort keys %RRD_list) {
+	print "\n" if ($debug >=3 );
+
 	my $do_stat = $RRD_list{ $rrd }->{ stat } ;
 	unless (defined $do_stat) { die "config error - missing stat in rrd $rrd " } ;
 
@@ -63,7 +66,7 @@ for my $rrd ( sort keys %RRD_list) {
 
 	unless ( -f $rrdfile ) {
                 printf STDERR "cannot find %s - skipping... \n", $rrdfile ;
-		# next;
+		next;
         }
 
 	# build  tag list
@@ -83,7 +86,15 @@ for my $rrd ( sort keys %RRD_list) {
 		printf " - values: %s \n", $rrd_valstr;
         } 
 
-	print "\n";
+	RRDs::update($rrdfile, '--template', $rrd_template, $rrd_valstr);
+	if ( RRDs::error ) {
+		printf STDERR ( "error updating RRD %s: %s \n", $rrdfile , RRDs::error ) ;
+		# die "rrd update error";
+	} elsif ($debug >=3 ) {
+		printf ( "\tsuccess updating RRD %s:  \n", $rrdfile );
+	}
+
+	#print "\n" if ($debug >=3 );
 
 
 }
