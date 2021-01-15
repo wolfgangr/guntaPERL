@@ -7,6 +7,8 @@ use Storable ();
 use Time::Piece;
 use File::stat;
 
+chdir '..' ; # omG ;-\
+
 
 # our $dtformat = '+\'%d.%m.%Y %T\'' ; # datetime format string for console `date`
 # our $RRDdtf = "+\'%d.%m.%Y %H:%M\'" ; # RRD does not like seconds here 
