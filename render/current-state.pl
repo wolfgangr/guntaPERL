@@ -48,7 +48,8 @@ print header();
 print start_html(-title => 'Testpage No2');
 print h1('Test 2');
 
-debug (\%tv, $sf_modified, $tp_modified , $hr_modified) ;
+debug ( [    \%tv, $sf_modified, $tp_modified , $hr_modified, \%config_by_tag ] ,
+       , [ qw(  *tv *sf_modified  *tp_modified   *hr_modified,  *config_by_tag    ) ] )	;
 
 print end_html();
 
@@ -60,7 +61,7 @@ exit ;
 sub debug {
   print
     "\n<pre><code>\n",
-    Dumper ( @_),
+    Data::Dumper->Dump ( @_),
     "\</code></pre>\n",
   ;
 }
