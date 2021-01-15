@@ -159,21 +159,16 @@ system ( "echo '$status' > $status_cache");
 
 # interval timer
 
-# $interval, $lastrun
-#sleep 2; # be sure not to fall into same second 
-# sleep 1;
 my $now = time()  ; 
 my $modulo = ($now - $interval_offset) % $interval ;
 my $nextrun = $now + $interval - $modulo ;
-# my $nextrun = $now + $modulo ;
 
-# my $nextrun =  ((int (($lastrun+1 + $interval_offset )  / $interval) +1 ) * $interval) + $interval_offset  ;
 my $sleeptime = $nextrun  - $now ;
 
 printf "iterator - last run: %d, now: %d, modulo %d, next run: %d, sleep: %d\n", 
 	$lastrun, $now, $modulo ,  $nextrun , $sleeptime ;
 
-$lastrun = $now ;
+$lastrun = $now ;  # just for debugging
 
 if ($sleeptime >0) {  sleep $sleeptime ; }
 
