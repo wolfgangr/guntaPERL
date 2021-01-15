@@ -19,8 +19,9 @@ my $debug = 3;
 my $homedir = `echo ~`;
 chomp $homedir ;
 
-my $username = `echo \$USER` ;
-chomp $username ;
+# my $username = `echo \$USER` ;
+my @passdw = getpwuid($<);
+my $username = $passdw[0];
 
 my $file_tpl =  $homedir .  '/guntamatic/rrd/%s.rrd' ;
 my $status_cache =  $homedir . '/guntamatic/rrd/last_status.pls' ; # keep status between invocations, use "perl Storable"
