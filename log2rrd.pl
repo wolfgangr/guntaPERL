@@ -11,7 +11,7 @@ use Data::Dumper::Simple ;
 use RRDs() ;
 # use Cwd  qw (realpath);
 # use File::Glob ':bsd_glob';
-# use Storable;
+use Storable ();
 
 
 my $debug = 3;
@@ -27,7 +27,8 @@ my @passdw = getpwuid($<);
 my $username = $passdw[0];
 
 my $file_tpl =  $homedir .  '/guntamatic/rrd/%s.rrd' ;
-my $status_cache =  $homedir . '/guntamatic/rrd/last_status.pls' ; # keep status between invocations, use "perl Storable"
+my $status_cache =  $homedir . '/guntamatic/rrd/last_status.pls' ; # keep status between invocations, as string
+my $tv_exporter =  $homedir . '/guntamatic/rrd/tv_export.storable' ; # keep %tv hash for consumers, use "perl Storable"
 my $status_logfile = sprintf '/var/log/%s/guntamatic_status.log', $username  ; 
 
 
@@ -155,6 +156,10 @@ unless ( $oldstate eq $status) {
 	print "status unchanged\n ";
 }
 system ( "echo '$status' > $status_cache");
+
+# ~~~~~~~~~~ export 
+
+Storable::lock_store \%tv, $tv_exporter ;
 
 # ~~~~~~~~~~~ end of work,  ~~~~~~~~~~
 

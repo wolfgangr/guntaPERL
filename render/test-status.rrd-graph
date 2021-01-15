@@ -1,0 +1,51 @@
+ --title=Guntamatic status \
+ DEF:a=/home/wrosner/guntamatic/rrd//status.rrd:prog_main:LAST \
+ DEF:b=/home/wrosner/guntamatic/rrd//status.rrd:prog_HK1:LAST \
+ DEF:c=/home/wrosner/guntamatic/rrd//status.rrd:prog_HK2:LAST \
+ DEF:e=/home/wrosner/guntamatic/rrd//status.rrd:opmode:LAST \
+ DEF:f=/home/wrosner/guntamatic/rrd//status.rrd:S_op:LAST \
+ DEF:g=/home/wrosner/guntamatic/rrd//status.rrd:SP_buf0:LAST \
+ DEF:h=/home/wrosner/guntamatic/rrd//status.rrd:SP_hw0:LAST \
+ DEF:i=/home/wrosner/guntamatic/rrd//status.rrd:S_P1:LAST \
+ DEF:j=/home/wrosner/guntamatic/rrd//status.rrd:S_P2:LAST \
+ DEF:k=/home/wrosner/guntamatic/rrd//status.rrd:op_hr:LAST \
+ DEF:r=/home/wrosner/guntamatic/rrd//statusX.rrd:ign_vnt:LAST \
+ DEF:s=/home/wrosner/guntamatic/rrd//statusX.rrd:ign_ht:LAST \
+ CDEF:D=4,c,- \
+ CDEF:L=24,b,- \
+ CDEF:O=i,16,+ \
+ CDEF:T=j,26,+ \
+ LINE1:a#FFD700:prog_main LAST \
+ LINE1:b#0000FF:prog_HK1 LAST \
+ LINE1:c#008000:prog_HK2 LAST \
+ LINE1:e#FF0000:opmode LAST \
+ LINE1:f#FF00FF:S_op LAST \
+ LINE1:g#FF00FF:SP_buf0 LAST \
+ LINE1:h#FF00FF:SP_hw0 LAST \
+ LINE1:i#FF00FF:S_P1 LAST \
+ LINE1:j#FF00FF:S_P2 LAST \
+ LINE1:k#FFA500:op_hr LAST \
+ LINE1:r#00FFFF:ign_vnt LAST \
+ LINE1:s#00FFFF:ign_ht LAST \
+ LINE1:10#008000:  \
+ AREA:D#008000: HK2:STACK \
+ VDEF:D_MIN=D,MINIMUM \
+ GPRINT:D_MIN:Min\: %8.2lf%s \
+ VDEF:D_AVERAGE=D,AVERAGE \
+ GPRINT:D_AVERAGE:Avg\: %8.2lf%s \
+ VDEF:D_MAX=D,MAXIMUM \
+ GPRINT:D_MAX:Max\: %8.2lf%s \
+ VDEF:D_LAST=D,LAST \
+ GPRINT:D_LAST:Last\: %8.2lf%s \
+ LINE1:10#008000:  \
+ LINE3:L#0000FF: HK1 \
+ LINE1:20#0000FF:  \
+ LINE1:20#0000FF:  \
+ LINE3:O#008000:  \
+ LINE1:16#008000:  \
+ LINE1:17#008000:  \
+ LINE3:T#0000FF:  \
+ LINE1:26#0000FF:  \
+ LINE1:27#0000FF:  \
+ LINE1:20#0000FF:  \
+ LINE1:24#0000FF: 
