@@ -12,6 +12,11 @@ use Data::Dumper::Simple ;
 use JSON() ;
 use RRDs() ;
 
+
+# hack to produce 60s- updates
+my $fake_intvl = 60; # produce updates for every 60s
+my $fake_max = 10 ;  # but not more than 10 per real dataset
+
 my $rrd_temps = './rrd/temps.rrd';
 # my $rrd_status = './rrd/status.rrd';
 # my $rrd_extra = './rrd/extra.rrd';
@@ -28,7 +33,7 @@ my $filename = shift  @ARGV or die "usage: $0 filename-log";
 
 open (my $FILE, '<', $filename) or die "cannot open $filename";
 
-
+my $lastupdate =0;
 while (<$FILE>) {
 	# my ($dt, $vals) = $_ =~   /^\[(.*)\];\[(.*)\]$/ ;
 	my ($dt, $vals) = $_ =~   /^\[(.*)\];(\[.*\])$/ ;
@@ -71,16 +76,30 @@ while (<$FILE>) {
 	# print $rrd_template , "\n";
 
 	my @rrd_values = map { $tv{ $_ }   } @taglist;
-	my $rrd_values = join (':', $unixtime  , @rrd_values);
+	my $rrd_values = join (':',  @rrd_values);
 	# print $rrd_values , "\n";
 
-	RRDs::update($rrd_temps, '--template', $rrd_template, $rrd_values);
+	#~~~~~~~~~~~~ time faking for rrd boundaries
+	
+	$unixtime -= $unixtime % $fake_intvl ;
+ 	my $fake_time;
+	if ( ($unixtime - $lastupdate)  <= ( $fake_intvl *  $fake_max ) ) {
+		$fake_time = $lastupdate;
+	} else {
+		$fake_time = $unixtime - ($fake_intvl *  $fake_max ) ;
+	}
+	$lastupdate = $unixtime; 
+# ~~~~~~~~~~~
+    for ( ; $fake_time <= $unixtime ; $fake_time += $fake_intvl) {
+
+	RRDs::update($rrd_temps,  '--skip-past-updates' , '--template', $rrd_template, $fake_time . ':' .   $rrd_values);
 	if ( RRDs::error ) {
 		printf STDERR ( "error updating RRD %s: %s \n", $rrd_temps , RRDs::error ) ;
 		# die "rrd update error";
 	}
-
-	# die "========================== DEBUG ==========================";
+    }
+# ~~~~~~~~~~~~~~~~~
+    # die "========================== DEBUG ==========================";
 
 }
 
