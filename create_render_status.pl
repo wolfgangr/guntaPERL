@@ -14,9 +14,12 @@ our (%config, %selectors, %config_by_tag , %RRD_list);
 require ('./config_plain.pm');
 
 
-# $fields => qw(  prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hiw0 S_P1 S_P2 op_hr) ;
-my $fields =$selectors{ status } ;
+my $fields = [ qw(  prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr) ] ;
+# my $fields =$selectors{ status } ;
 my $rrd_dir = "/home/wrosner/guntamatic/rrd";
+
+my $v_spc = 10;
+my $v_jmp = 2;
 
 print "--title=Guntamatic status test\n";
 
@@ -48,4 +51,13 @@ for my $tag (@$fields) {
 	printf  "DEF:def_%s=%s/%s.rrd:%s:%s\n", 
 		$tag, $rrd_dir, $tags_to_rrd{ $tag }, $tag , $tags_to_cf{$tag }  ;
 }
+
+
+for my $i (0 ..  $#$fields) {
+	my $tag = $$fields[ $i ];
+
+}
+
+
+
 
