@@ -1,0 +1,23 @@
+ --upper-limit=120 \
+ --lower-limit=0 \
+--legend-position=east
+ DEF:d=/home/wrosner/guntamatic/rrd//temps.rrd:T_cald:AVERAGE \
+ DEF:i=/home/wrosner/guntamatic/rrd//tempsX.rrd:T_ret:AVERAGE \
+ DEF:j=/home/wrosner/guntamatic/rrd//tempsX.rrd:pc_exh:AVERAGE \
+ DEF:k=/home/wrosner/guntamatic/rrd//tempsX.rrd:pc_vent:AVERAGE \
+ DEF:l=/home/wrosner/guntamatic/rrd//tempsX.rrd:pc_stok:AVERAGE \
+ DEF:n=/home/wrosner/guntamatic/rrd//tempsX.rrd:pc_aug1:AVERAGE \
+ DEF:p=/home/wrosner/guntamatic/rrd//tempsX.rrd:pc_grt:AVERAGE \
+ DEF:u=/home/wrosner/guntamatic/rrd//tempsX.rrd:I_stok:MAX \
+ DEF:w=/home/wrosner/guntamatic/rrd//tempsX.rrd:I_aug1:MAX \
+ CDEF:A=w,100,* \
+ CDEF:D=u,100,* \
+ LINE1:d#8888aa:°C Vorl\n:dashes=2,3
+ LINE2:i#0000FF:°C Rückl\n
+ LINE1:j#000088:% RgLeist\n
+ LINE1:k#008000:% Vent\n
+ LINE2:l#FF00FF:% Stok\n
+ LINE2:n#800000:% Austr\n
+ LINE2:p#FF0000:% Rost\n
+ LINE1:A#800000:cA Austr\n:dashes=1,4 
+ LINE1:D#ff00ff:cA Stok\n:dashes=1,4

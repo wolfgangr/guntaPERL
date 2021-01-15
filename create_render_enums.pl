@@ -15,13 +15,17 @@ require ('./config_plain.pm');
 
 
 # my $fields = [ qw(  prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr) ] ;
-my $fields =   [ qw(   enbl     SP_buf0   SP_hw0      S_P1     S_P2 ) ] ;
-my $f_colors = [ qw(  0000ff   ff0000     ff8800      66aa00   00aa66  )  ] ;
-my $f_labels = [ 'Freigabe' ,  'Pu Puff.', 'Pu Warmw.', 'Pu Altb', 'Pu Neub' ];
+my $fields =   [ qw(  prog_main  opmode    prog_HK1  prog_HK2  ) ] ;
+my $f_colors = [ qw(  aa00aa     0000ff    66aa00    00aa22   )  ] ;
+my $f_labels = [     'Progm.' , 'Betrieb', 'Prg Altb', 'Prg Neub' ];
+my $f_num_E  = [       10     ,   5      ,    5   ,     5    ];    
+my $f_pos    = [       1     ,   10     ,   20   ,       25  ,   30  ]; # last one is top
+
+
 # my $fields =$selectors{ status } ;
 my $rrd_dir = "/home/wrosner/guntamatic/rrd";
 
-my $v_spc = 5;
+my $v_spc = 10;
 my $v_jmp = 2;
 my $v_off =0;
 
@@ -60,13 +64,13 @@ my $prelude =  <<"EOFPRELUDE" ;
 --lower-limit=0
 --upper-limit=%d
 --rigid
---height=70
+--height=100
 --legend-position=east
 --legend-direction=bottomup
 TEXTALIGN:left
 EOFPRELUDE
 
-printf $prelude,   (($v_spc +1) *  $#$fields + $v_off) ;
+printf $prelude,   @$f_pos [ -1 ] ;
 
 
 
@@ -84,9 +88,9 @@ for my $i (0 ..  $#$fields) {
 	my $cv   = 'V_' . $tag;
 	my $cu   = 'U_' . $tag;	
 
-	my $vert_Z = $i * $v_spc + $v_off;
+	my $vert_Z =  @$f_pos [ $i ] ;
 	my $vert_U =  $vert_Z  ;
-	my $vert_V =  $vert_Z + $v_jmp ;
+	my $vert_V =  $vert_Z  ;
 
 	 
 	#  CDEF:N=K,0,EQ,106,UNKN,IF \  ' Z ero
@@ -94,25 +98,30 @@ for my $i (0 ..  $#$fields) {
 		$cz, $def_, $vert_Z ;
 
 	#  CDEF:O=K,110,UNKN,IF \	' V alue 
-	printf "CDEF:%s=%s,%d,UNKN,IF \n",
-		$cv, $def_, $vert_V;
+	# printf "CDEF:%s=%s,DUP,UNKN,IF \n",
+	#	$cv, $def_ ;
 
 	#  CDEF:P=K,UN,108,UNKN,IF \	' U nknown
-	printf "CDEF:%s=%s,UN,%d,UNKN,IF \n",
-		$cu, $def_, $vert_U;
+	# printf "CDEF:%s=%s,UN,%d,UNKN,IF \n",
+	# 	$cu, $def_, $vert_U;
 
 
 
 	#  LINE3:N#FF0000:  \  medium black - Z
-	printf "LINE2:%s#000000:\n", $cz;
+	printf "LINE1:%d#777777:\n", $vert_Z ;
+
 
 	#  LINE3:O#008000:  \ thick green - V
-	printf "LINE3:%s#%s:%s\\n\n", $cv, $$f_colors[$i] , $$f_labels[ $i ];
+	printf "AREA:%s#%s:%s\\n:STACK\n", $def_, $$f_colors[$i] , $$f_labels[ $i ];
+
+
+	printf "LINE2:%s#%s:\n", $cz , $$f_colors[$i]   ;
 
 	#  LINE1:P#808080:  tiny grey - U
-	printf "LINE1:%s#aaaaaa:\n", $cu;
+	# printf "LINE1:%s#aaaaaa:\n", $cu;
+	# printf "LINE2:%s#000000:\n", $cz;
 
-
+	print "COMMENT: \\n\n";
 }
 
 

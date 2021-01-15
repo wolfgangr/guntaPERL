@@ -1,4 +1,3 @@
- --title=Guntamatic temps \
 --lower-limit=-5 \
  --upper-limit=110 \
 --rigid \
@@ -19,6 +18,6 @@ TEXTALIGN:left
  LINE2:e#ff0000:T Warmw.\n
  LINE1:f#ff8800:T Puf obn\n
  LINE1:g#aaaa00:T Puf unt\n
- LINE1:j#009944:T Vorl. 2\n
- LINE1:i#449900:T Vorl. 1\n
+ LINE1:j#009944:T Vorl Neub\n
+ LINE1:i#449900:T Vorl Altb\n
  LINE2:h#FF00FF:T Außen \n

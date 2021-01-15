@@ -15,15 +15,15 @@ require ('./config_plain.pm');
 
 
 # my $fields = [ qw(  prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr) ] ;
-my $fields =   [ qw(   enbl     SP_buf0   SP_hw0      S_P1     S_P2 ) ] ;
-my $f_colors = [ qw(  0000ff   ff0000     ff8800      66aa00   00aa66  )  ] ;
-my $f_labels = [ 'Freigabe' ,  'Pu Puff.', 'Pu Warmw.', 'Pu Altb', 'Pu Neub' ];
+my $fields =   [ qw(  fault0  fault1  frflp    level   stb    tks1    ign_vnt  ign_ht) ] ;
+my $f_colors = [ qw(  ff0000  ff8800  008800   66aa00  00aa66 0000bb  aaaa00   88bb00 )  ] ;
+my $f_labels = [  qw( Stoer0   Stoer1   Brandkl  Brensst ÜberT  Tür     ZündV    ZüHeiz  ) ];
 # my $fields =$selectors{ status } ;
 my $rrd_dir = "/home/wrosner/guntamatic/rrd";
 
-my $v_spc = 5;
-my $v_jmp = 2;
-my $v_off =0;
+my $v_spc = 10;
+my $v_jmp = 3;
+my $v_off = 5;
 
 my $title = "Guntamatic status test";
 
@@ -60,7 +60,7 @@ my $prelude =  <<"EOFPRELUDE" ;
 --lower-limit=0
 --upper-limit=%d
 --rigid
---height=70
+--height=120
 --legend-position=east
 --legend-direction=bottomup
 TEXTALIGN:left
