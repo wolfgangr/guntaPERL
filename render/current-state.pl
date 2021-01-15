@@ -8,10 +8,17 @@ use Storable ();
 our $dtformat = '+\'%d.%m.%Y %T\'' ; # datetime format string for console `date`
 our $RRDdtf = "+\'%d.%m.%Y %H:%M\'" ; # RRD does not like seconds here 
 
+my $statusfile = '../rrd/tv_export.storable';
+
+my $tv_p = Storable::lock_retrieve( $statusfile );
+my %tv = %$tv_p ;
 
 print header();
 print start_html(-title => 'Testpage No2');
 print h1('Test 2');
+
+debug (\%tv) ;
+
 print end_html();
 
 exit ;
