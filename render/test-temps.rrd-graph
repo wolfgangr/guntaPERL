@@ -1,10 +1,11 @@
  --title=Guntamatic temps \
 --lower-limit=-5 \
  --upper-limit=110 \
- --rigid \
+--rigid \
+--legend-position=east
+TEXTALIGN:left
  DEF:a=/home/wrosner/guntamatic/rrd//temps.rrd:pc_buf:AVERAGE \
  DEF:b=/home/wrosner/guntamatic/rrd//temps.rrd:pc_pwr:AVERAGE \
- DEF:c=/home/wrosner/guntamatic/rrd//temps.rrd:CO2:AVERAGE \
  DEF:d=/home/wrosner/guntamatic/rrd//temps.rrd:T_cald:AVERAGE \
  DEF:e=/home/wrosner/guntamatic/rrd//temps.rrd:T_hw0:AVERAGE \
  DEF:f=/home/wrosner/guntamatic/rrd//temps.rrd:T_buf_top:AVERAGE \
@@ -12,14 +13,12 @@
  DEF:h=/home/wrosner/guntamatic/rrd//temps.rrd:T_out:AVERAGE \
  DEF:i=/home/wrosner/guntamatic/rrd//temps.rrd:T_P1:AVERAGE \
  DEF:j=/home/wrosner/guntamatic/rrd//temps.rrd:T_P2:AVERAGE \
- LINE2:a#FF0000:Puffer % \
- LINE2:b#0000FF:Kessel % \
- LINE1:c#4682B4:CO2  \
- LINE1:d#000080:T Kessel \
- LINE2:e#008000:T Warmwasser \
- LINE1:f#00FF7F:T Puffer oben \
- LINE1:g#90EE90:T Puffer unten \
- LINE2:h#FF00FF:T Außen \
- LINE1:i#FFFF00:T Vorlauf 1 \
- LINE1:j#FFA500:T Vorlauf 2 \
- LINE1:0#808080: 
+ LINE1:b#000088:Kessel %\n
+ LINE2:d#0000ff:T Kessel\n
+ LINE1:a#FF0000:Puffer %\n:dashes=5,3
+ LINE2:e#ff0000:T Warmw.\n
+ LINE1:f#ff8800:T Puf obn\n
+ LINE1:g#aaaa00:T Puf unt\n
+ LINE1:j#009944:T Vorl. 2\n
+ LINE1:i#449900:T Vorl. 1\n
+ LINE2:h#FF00FF:T Außen \n

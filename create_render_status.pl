@@ -14,14 +14,16 @@ our (%config, %selectors, %config_by_tag , %RRD_list);
 require ('./config_plain.pm');
 
 
-my $fields = [ qw(  prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr) ] ;
-my $f_colors = [ ('#ff0000') x 11 ] ;
+# my $fields = [ qw(  prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr) ] ;
+my $fields =   [ qw(   enbl     SP_buf0   SP_hw0      S_P1     S_P2 ) ] ;
+my $f_colors = [ qw(  0000ff   ff0000     ff8800      66aa00   00aa66  )  ] ;
+my $f_labels = [ 'Freigabe' ,  'P Puff.', 'P Warmw.', 'P HK1', 'P HK2' ];
 # my $fields =$selectors{ status } ;
 my $rrd_dir = "/home/wrosner/guntamatic/rrd";
 
-my $v_spc = 10;
+my $v_spc = 5;
 my $v_jmp = 2;
-my $v_off =10;
+my $v_off =0;
 
 my $title = "Guntamatic status test";
 
@@ -55,14 +57,16 @@ print STDERR Dumper (\$fields);
 # print "--rigid\n";
 
 my $prelude =  <<"EOFPRELUDE" ;
---title=%s
 --lower-limit=0
 --upper-limit=%d
 --rigid
---height=300
+--height=70
+--legend-position=east
+--legend-direction=bottomup
+TEXTALIGN:left
 EOFPRELUDE
 
-printf $prelude, $title,  (($v_spc +1) *  $#$fields + $v_off) ;
+printf $prelude,   (($v_spc +1) *  $#$fields + $v_off) ;
 
 
 
@@ -99,14 +103,14 @@ for my $i (0 ..  $#$fields) {
 
 
 
-	#  LINE3:N#FF0000:  \  medium red - Z
-	printf "LINE2:%s#FF0000:\n", $cz;
+	#  LINE3:N#FF0000:  \  medium black - Z
+	printf "LINE2:%s#000000:\n", $cz;
 
 	#  LINE3:O#008000:  \ thick green - V
-	printf "LINE3:%s#008800:%s\n", $cv, $def_;
+	printf "LINE3:%s#%s:%s\\n\n", $cv, $$f_colors[$i] , $$f_labels[ $i ];
 
 	#  LINE1:P#808080:  tiny grey - U
-	printf "LINE1:%s#555555::dashes=1,3\n", $cu;
+	printf "LINE1:%s#aaaaaa:\n", $cu;
 
 
 }
