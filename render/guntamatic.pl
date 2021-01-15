@@ -145,7 +145,7 @@ for my $target (@targets) {
   my $rrdg_tail = `cat $rrdg_def` ;
 
   # clean bash style decoration like blanks and trailing \
-  my @tail = grep { $_ } map { /^\s(\S.*[^\s\\])\s*\\?\s*$/ ; $1  } split '\n', $rrdg_tail;
+  my @tail = grep { $_ } map { /^\s*(\S.*[^\s\\])\s*\\?\s*$/ ; $1  } split '\n', $rrdg_tail;
 
   # DEBUG (@tail);
    

@@ -49,7 +49,22 @@ for my $rrd (keys %RRD_list) {
 print STDERR Dumper (\%tags_to_rrd, \%tags_to_cf);
 print STDERR Dumper (\$fields);
 
-printf "--title=%s\n" , $title  if $title  ;
+# printf "--title=%s\n" , $title  if $title  ;
+# print "--lower-limit=0\n";
+# print "--lower-limit=0\n";
+# print "--rigid\n";
+
+my $prelude =  <<"EOFPRELUDE" ;
+--title=%s
+--lower-limit=0
+--upper-limit=%d
+--rigid
+--height=300
+EOFPRELUDE
+
+printf $prelude, $title,  (($v_spc +1) *  $#$fields + $v_off) ;
+
+
 
 for my $tag (@$fields) {
 	printf  "DEF:def_%s=%s/%s.rrd:%s:%s\n", 
@@ -66,7 +81,7 @@ for my $i (0 ..  $#$fields) {
 	my $cu   = 'U_' . $tag;	
 
 	my $vert_Z = $i * $v_spc + $v_off;
-	my $vert_U =  $vert_Z;
+	my $vert_U =  $vert_Z  ;
 	my $vert_V =  $vert_Z + $v_jmp ;
 
 	 
@@ -88,10 +103,10 @@ for my $i (0 ..  $#$fields) {
 	printf "LINE2:%s#FF0000:\n", $cz;
 
 	#  LINE3:O#008000:  \ thick green - V
-	printf "LINE3:%s#008800:\n", $cv;
+	printf "LINE3:%s#008800:%s\n", $cv, $def_;
 
 	#  LINE1:P#808080:  tiny grey - U
-	printf "LINE1:%s#008800:\n", $cu;
+	printf "LINE1:%s#555555::dashes=1,3\n", $cu;
 
 
 }
