@@ -4,11 +4,20 @@ use warnings;
 use CGI qw/:standard/;
 use Data::Dumper ;
 use Storable ();
+use Time::Piece;
+use File::stat;
+
 
 our $dtformat = '+\'%d.%m.%Y %T\'' ; # datetime format string for console `date`
 our $RRDdtf = "+\'%d.%m.%Y %H:%M\'" ; # RRD does not like seconds here 
 
 my $statusfile = '../rrd/tv_export.storable';
+
+my $f_st = stat($statusfile) or die "No $statusfile: $!";
+my $sf_modified = $f_st->mtime ;
+
+my $tp_modified =  Time::Piece->new($sf_modified);
+my $hr_modified = $tp_modified->ymd . ' - ' . $tp_modified->hms;
 
 my $tv_p = Storable::lock_retrieve( $statusfile );
 my %tv = %$tv_p ;
@@ -17,7 +26,7 @@ print header();
 print start_html(-title => 'Testpage No2');
 print h1('Test 2');
 
-debug (\%tv) ;
+debug (\%tv, $sf_modified, $tp_modified , $hr_modified) ;
 
 print end_html();
 
