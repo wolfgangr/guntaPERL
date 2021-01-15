@@ -16,6 +16,8 @@ use RRDs() ;
 
 my $debug = 3;
 
+my $interval = 60 ; # run every ... seconds
+
 my $homedir = `echo ~`;
 chomp $homedir ;
 
@@ -45,6 +47,8 @@ if ($debug >=5 ) {
 
 
 # cheap conversion to infinite loop
+
+my $lastrun = time();
 
 BEGIN_OF_MAIN_LOOP:
 
@@ -150,6 +154,24 @@ unless ( $oldstate eq $status) {
 }
 system ( "echo '$status' > $status_cache");
 
-sleep 55;
+# ~~~~~~~~~~~ end of work,  ~~~~~~~~~~
+
+# interval timer
+
+# $interval, $lastrun
+
+my $now = time();
+my $nextrun =  (int ($lastrun  / $interval) +1 ) * $interval;
+my $sleeptime = $nextrun - $now ;
+
+printf "iterator - last run: %d, now: %d, next run: %d, sleep: %d\n", 
+	$lastrun, $now, $nextrun , $sleeptime ;
+
+$lastrun = $now ;
+
+if ($sleeptime >0) {  sleep $sleeptime ; }
+
+
+# sleep 55;
 goto BEGIN_OF_MAIN_LOOP ;
 
