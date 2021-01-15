@@ -27,10 +27,6 @@ my $file_tpl =  $homedir .  '/guntamatic/rrd/%s.rrd' ;
 my $status_cache =  $homedir . '/guntamatic/rrd/last_status.pls' ; # keep status between invocations, use "perl Storable"
 my $status_logfile = sprintf '/var/log/%s/guntamatic_status.log', $username  ; 
 
-# $status_cache = bsd_glob($status_cache, GLOB_TILDE | GLOB_ERR );
-# cave: must exist for glob to work....
-# print $status_cache ;
-# die "debug";
 
 our (%config,  %config_by_tag );
 our ($desc_url, $data_url);
@@ -47,6 +43,10 @@ if ($debug >=5 ) {
 	print Dumper (%RRD_list,  %selectors);
 }
 
+
+# cheap conversion to infinite loop
+
+BEGIN_OF_MAIN_LOOP:
 
 my @values = retrieve ( $data_url) or die " cannot retrieve boiler data $data_url";
 my $timestamp = time();
@@ -149,4 +149,7 @@ unless ( $oldstate eq $status) {
 	print "status unchanged\n ";
 }
 system ( "echo '$status' > $status_cache");
+
+sleep 55;
+goto BEGIN_OF_MAIN_LOOP ;
 
