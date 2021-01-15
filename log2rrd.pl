@@ -17,6 +17,7 @@ use RRDs() ;
 my $debug = 3;
 
 my $interval = 60 ; # run every ... seconds
+my $interval_offset = 23 ; # + offset
 
 my $homedir = `echo ~`;
 chomp $homedir ;
@@ -161,8 +162,8 @@ system ( "echo '$status' > $status_cache");
 # $interval, $lastrun
 
 my $now = time();
-my $nextrun =  (int ($lastrun  / $interval) +1 ) * $interval;
-my $sleeptime = $nextrun - $now ;
+my $nextrun =  ((int ($lastrun  / $interval) +1 ) * $interval) + $interval_offset  ;
+my $sleeptime = $nextrun  - $now ;
 
 printf "iterator - last run: %d, now: %d, next run: %d, sleep: %d\n", 
 	$lastrun, $now, $nextrun , $sleeptime ;
