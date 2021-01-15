@@ -1,14 +1,15 @@
 #!/bin/bash
 
-# updating /home/wrosner/guntamatic/rrd/status.rrd, stat=0 
 #  - fields: prog_main:prog_HK1:prog_HK2:enbl:opmode:S_op:SP_buf0:SP_hw0:S_P1:S_P2:op_hr 
 #  - values: 1610653229:1:2:2:1:0:0:0:0:1:1:1636 
 
+# does not really work...
+# --source ./rrd/arxv/2021-01-15/status.rrd.v2 \
+
 
 /usr/bin/rrdtool create ./rrd/status.rrd \
---source ./rrd/arxv/2021-01-15/status.rrd.v2 \
 --step 1m  \
---start 1.1.2021 \
+--start 01.10.2020 \
 DS:prog_main:GAUGE:1m:0:20 \
 DS:prog_HK1:GAUGE:1m:0:10 \
 DS:prog_HK2:GAUGE:1m:0:10    \
