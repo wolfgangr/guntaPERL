@@ -16,8 +16,8 @@ use RRDs() ;
 
 my $debug = 3;
 
-my $interval = 60 ; # run every ... seconds
-my $interval_offset = 23 ; # + offset
+my $interval = 60 ; # run every ... seconds - align with rrd step!
+my $interval_offset = 23 ; # + offset for retrieveal
 
 my $homedir = `echo ~`;
 chomp $homedir ;
@@ -55,6 +55,7 @@ BEGIN_OF_MAIN_LOOP:
 
 my @values = retrieve ( $data_url) or die " cannot retrieve boiler data $data_url";
 my $timestamp = time();
+$timestamp -=   $timestamp %  $interval;   # log at rrd interval boarders to avoid PDP rounding
 
 print Dumper  (@values) if ($debug >=5 ) ;
 
@@ -165,8 +166,8 @@ my $nextrun = $now + $interval - $modulo ;
 
 my $sleeptime = $nextrun  - $now ;
 
-printf "iterator - last run: %d, now: %d, modulo %d, next run: %d, sleep: %d\n", 
-	$lastrun, $now, $modulo ,  $nextrun , $sleeptime ;
+printf "timestamp: %d, iterator - last run: %d, now: %d, modulo %d, next run: %d, sleep: %d\n", 
+	$timestamp, $lastrun, $now, $modulo ,  $nextrun , $sleeptime ;
 
 $lastrun = $now ;  # just for debugging
 

@@ -5,17 +5,24 @@
 #  - values: 1610653229:1:2:2:1:0:0:0:0:1:1:1636 
 
 
-/usr/bin/rrdtool create ./rrd/status.rrd --start N --step 100s  \
-DS:prog_main:GAUGE:5m:0:20 \
-DS:prog_HK1:GAUGE:5m:0:10 \
-DS:prog_HK2:GAUGE:5m:0:10    \
-DS:enbl:GAUGE:5m:0:1  \
-DS:opmode:GAUGE:5m:0:10 \
-DS:S_op:GAUGE:5m:0:1 \
-DS:SP_buf0:GAUGE:5m:0:1 \
-DS:SP_hw0:GAUGE:5m:0:1 \
-DS:S_P1:GAUGE:5m:0:1 \
-DS:S_P2:GAUGE:5m:0:1 \
-DS:op_hr:COUNTER:5m:0:U \
+/usr/bin/rrdtool create ./rrd/status.rrd \
+--source ./rrd/arxv/2021-01-15/status.rrd.v2 \
+--step 1m  \
+--start 1.1.2021 \
+DS:prog_main:GAUGE:1m:0:20 \
+DS:prog_HK1:GAUGE:1m:0:10 \
+DS:prog_HK2:GAUGE:1m:0:10    \
+DS:enbl:GAUGE:1m:0:1  \
+DS:opmode:GAUGE:1m:0:10 \
+DS:S_op:GAUGE:1m:0:1 \
+DS:SP_buf0:GAUGE:1m:0:1 \
+DS:SP_hw0:GAUGE:1m:0:1 \
+DS:S_P1:GAUGE:1m:0:1 \
+DS:S_P2:GAUGE:1m:0:1 \
+DS:op_hr:COUNTER:1m:0:U \
+RRA:LAST:0.5:1m:2w \
 RRA:LAST:0.5:5m:6M \
-RRA:LAST:0.5:1h:2y \
+RRA:LAST:0.5:1h:6M \
+RRA:MIN:0.5:1h:6M \
+RRA:MAX:0.5:1h:6M \
+RRA:AVERAGE:0.5:1h:5y \
