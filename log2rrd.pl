@@ -129,6 +129,10 @@ for my $rrd ( sort keys %RRD_list) {
 }
 
 printf "\nstatus  string:%s\n cache=%s, logfile=%s, \n",  $status, $status_cache, $status_logfile;
+my $oldstate= Storable::retrieve ($status_cache) ;
+unless ( $oldstate eq $status) {
+
+	Storable::store( $status, $status_cache);
+}
 
 
-my $oldstate = $status_cache ;
