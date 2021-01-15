@@ -127,12 +127,25 @@ for my $rrd ( sort keys %RRD_list) {
 		}
 	}
 }
-
+# rrd writing done
+#
+# check for satus change
 printf "\nstatus  string:%s\n cache=%s, logfile=%s, \n",  $status, $status_cache, $status_logfile;
-my $oldstate= Storable::retrieve ($status_cache) ;
+# my $oldstate= Storable::retrieve ($status_cache) if (-e $status_cache) ;
+my $oldstate= `cat $status_cache`  if (-e $status_cache) ;
+chomp $oldstate;
+
 unless ( $oldstate eq $status) {
-
-	Storable::store( $status, $status_cache);
+	print "status changed\n ";
+	# system ( "echo '$status' > $status_cache");	
+	my $hrdate = `date`;
+	chomp $hrdate;
+	my $logline = $hrdate;
+	$logline .= ':' . $timestamp . ':' ;
+	$logline .= $status;
+	system ( "echo '$logline' >> $status_logfile "); 
+} else {
+	print "status unchanged\n ";
 }
-
+system ( "echo '$status' > $status_cache");
 
