@@ -130,7 +130,7 @@ for my $rrd ( sort keys %RRD_list) {
 # rrd writing done
 #
 # check for satus change
-printf "\nstatus  string:%s\n cache=%s, logfile=%s, \n",  $status, $status_cache, $status_logfile;
+printf "\nstatus  string:%s\n cache= %s , logfile= %s , \n",  $status, $status_cache, $status_logfile;
 # my $oldstate= Storable::retrieve ($status_cache) if (-e $status_cache) ;
 my $oldstate= `cat $status_cache`  if (-e $status_cache) ;
 chomp $oldstate;
