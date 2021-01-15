@@ -12,7 +12,7 @@ our $dtformat = '+\'%d.%m.%Y %T\'' ; # datetime format string for console `date`
 our $RRDdtf = "+\'%d.%m.%Y %H:%M\'" ; # RRD does not like seconds here 
 our $title = " Guntamatic Powerchip 50 @" . `hostname -f` ;
 our $tmpdir= "./tmp" ; 
-our @targets = qw ( test-temps test-status   );
+our @targets = qw ( gen-status test-temps test-status   );
 
 
 # calculate interval:

@@ -10,5 +10,4 @@ test/*
 daqd???.cgi?key=*3*
 rrd2csv.pl
 rrdtest.pl
-render/tmp/*
 render_spec.pm
