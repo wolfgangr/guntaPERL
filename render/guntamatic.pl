@@ -15,6 +15,17 @@ our $tmpdir= "./tmp" ;
 our @targets = qw (  test-temps gen-enums gen-status test-tempsX gen-statusX   );
 
 
+# /log-grep.pl 1610801839 1610801839 times range
+our $loggrepper = "./log-grep.pl %d %d times range";
+
+# http://kellerkind.rosner.lokal/pl_cgi/guntamatic_render/log-range.pl?start=20&num=100
+our $log_section_urlator = "./log-range.pl?start=%d&num=%d";
+
+# VRULE:time#color[:[legend][:dashes[=on_s[,off_s[,on_s,off_s]...]][:dash-offset=offset]]]
+our $log_event_tag = "VRULE:%d#dddddd";
+our $event_min_px =5;   # skip vertical lines closer than ... px
+
+
 # calculate interval:
 # try to parse rrd AT notation
 # - if 2 of (start / end / int ) are given, calcuate the third
@@ -133,6 +144,30 @@ if ( param('shift_ll')) {
 #  $frm_end   = mydatetime($numstart) ;
 #  $frm_intvl = mytimediff2str ($interval);
 #}
+# ---------------- prepare event rendering --------------
+
+# get list of times and log section
+# /log-grep.pl 1610801839 1610801839 times range
+
+my $loggrep_qry = sprintf $loggrepper, $numstart, $numend;
+my $loggrep_rsp = `$loggrep_qry`;
+my @event_times = split ('\n', $loggrep_rsp);
+
+DEBUG ( \@event_times);
+
+# last line contains start and stop line numbers in log file
+my $loggrep_ll = pop @event_times;
+my ($log_evt_first_l , $log_evt_num_l) = split ( ' ',  $loggrep_ll, 2);
+
+# prep url for log section rendering
+# http://kellerkind.rosner.lokal/pl_cgi/guntamatic_render/log-range.pl?start=20&num=100
+my $log_section_url = spritf $log_section_urlator, $log_evt_first_l , $log_evt_num_l ;
+
+# prepare list of vline definitions
+# VRULE:time#color[:[legend][:dashes[=on_s[,off_s[,on_s,off_s]...]][:dash-offset=offset]]]
+
+
+
 # ===================================== create chart(s) =====================================================
 
 #  --start, --end, --height, --width, --base  werden dynamisch erstellt
@@ -278,7 +313,7 @@ EOF_FRAME
 
 
 
-goto ENDHTML ;
+### goto ENDHTML ;
 # ~~~~~~~~~~ rrd time debug
 
 
