@@ -14,6 +14,9 @@ our $title = " Guntamatic Powerchip 50 @" . `hostname -f` ;
 our $tmpdir= "./tmp" ; 
 our @targets = qw (  test-temps gen-enums gen-status test-tempsX gen-statusX   );
 
+# URL to be displayed in the state frame
+my $state_frame_url ="./current-state.pl";
+
 
 # /log-grep.pl 1610801839 1610801839 times range
 our $loggrepper = "./log-grep.pl %d %d times range";
@@ -214,7 +217,6 @@ for my $target (@targets) {
   ;
 
   my @rrdg_array = (split '\n', $rrdg_string)  ;
-  # push @rrdg_array , @event_vrule_defs ;
   push @rrdg_array ,  @tail ;
   push @rrdg_array , @event_vrule_defs ;
 
@@ -313,13 +315,11 @@ for my $target (@targets) {
 
 print "</table>\n";
 
-# frame for status display and may be more
+# frame for status display
+# my $furl ="./current-state.pl";
+#$state_frame_url 
 
-
-my $furl ="./current-state.pl";
-
-
-printf <<"EOF_FRAME" , $furl, $furl ;
+printf <<"EOF_FRAME" , $state_frame_url , $state_frame_url ;
 <iframe src="%s" height="300" width="1200"  name="status Variablen">
   <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen:
   Sie können die eingebettete Seite über den folgenden Verweis aufrufen: 
@@ -329,8 +329,20 @@ printf <<"EOF_FRAME" , $furl, $furl ;
 EOF_FRAME
 
 
+# frame for event log display
+# 
+printf <<"EOF_FRAME" ,   $log_section_url , $log_section_url ;
+<iframe src="%s" height="300" width="1200"   name="log extract">
+  <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen:
+  Sie können die eingebettete Seite über den folgenden Verweis aufrufen: 
+  <a href="%s">Log Extract</a>
+  </p>
+</iframe>
+EOF_FRAME
 
-### goto ENDHTML ;
+
+
+goto ENDHTML ;
 # ~~~~~~~~~~ rrd time debug
 
 
