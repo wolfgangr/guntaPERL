@@ -260,6 +260,15 @@ for my $target (@targets) {
 }
 
 print "</table>\n";
+
+# frame for status display and may be more
+
+print <<"EOF_FRAMESET";
+<frameset cols="200, *">
+<frame src="/pl_cgi/guntamatic_render/current-state.pl" name="status">
+</frameset>
+EOF_FRAMESET
+
 goto ENDHTML ;
 # ~~~~~~~~~~ rrd time debug
 

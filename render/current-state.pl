@@ -44,7 +44,7 @@ my %tv = %$tv_p ;
 
 # my $printf_fmt = "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n";
 
-my $printf_fmt = "<tr><td>%03d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n";
+my $printf_fmt = "<tr><td>%03d&nbsp;</td><td>&nbsp;%s&nbsp;</td><td>&nbsp;<b>%s</b>&nbsp;</td><td>%s</td><td>%s</td><td>&nbsp;%s</td></tr>\n";
 my $th  = "<table><tr><th>ID</th><th>Kürzel</th><th>Wert</th><th>Einheit</th><th>Typ</th><th>Beschreibung</th></tr>\n";
 
 
