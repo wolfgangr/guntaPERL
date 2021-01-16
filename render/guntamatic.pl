@@ -22,8 +22,8 @@ our $loggrepper = "./log-grep.pl %d %d times range";
 our $log_section_urlator = "./log-range.pl?start=%d&num=%d";
 
 # VRULE:time#color[:[legend][:dashes[=on_s[,off_s[,on_s,off_s]...]][:dash-offset=offset]]]
-our $log_event_tag = "VRULE:%d#dddddd";
-our $event_min_px =5;   # skip vertical lines closer than ... px
+our $log_event_tag = "VRULE:%d#aaaaaa"; #   ::dashes=2,2";
+our $event_min_px =20;   # skip vertical lines closer than ... px
 
 
 # calculate interval:
@@ -214,7 +214,9 @@ for my $target (@targets) {
   ;
 
   my @rrdg_array = (split '\n', $rrdg_string)  ;
+  # push @rrdg_array , @event_vrule_defs ;
   push @rrdg_array ,  @tail ;
+  push @rrdg_array , @event_vrule_defs ;
 
   # DEBUG (@rrdg_array );
 
