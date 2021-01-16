@@ -15,7 +15,7 @@ chdir '..' ; # omG ;-\
 # our $RRDdtf = "+\'%d.%m.%Y %H:%M\'" ; # RRD does not like seconds here 
 
 my $statusfile = './rrd/tv_export.storable';
-my $title = "Guntamatic PowerChip aktueller Status";
+my $title = "aktueller Status Guntamatic PowerChip";
 
 # ~~~~ local config stuff 
 
@@ -44,8 +44,16 @@ my %tv = %$tv_p ;
 
 # my $printf_fmt = "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n";
 
-my $printf_fmt = "<tr><td>%03d&nbsp;</td><td>&nbsp;%s&nbsp;</td><td>&nbsp;<b>%s</b>&nbsp;</td><td>%s</td><td>%s</td><td>&nbsp;%s</td></tr>\n";
-my $th  = "<table><tr><th>ID</th><th>Kürzel</th><th>Wert</th><th>Einheit</th><th>Typ</th><th>Beschreibung</th></tr>\n";
+my $printf_fmt = "<td>%03d&nbsp;</td><th>&nbsp;%s&nbsp;</th><td>&nbsp;<b>%s</b>&nbsp;</td><td>%s</td>"
+	#. "<td>foo</td>"
+	. "<td>%s</td><td>&nbsp;%s</td>"
+	. "<td>%s</td>" ;
+	# . "</tr>\n";
+my $th  = "<table><tr><th>ID</th><th>Kürzel</th><th>Wert</th><th>Einheit</th>"
+#	. "<th>bar</th>"
+	. "<th>Typ</th><th>Beschreibung</th>" 
+	. "<th>Aufzählung</th>"
+	. "</tr>\n";
 
 
 
@@ -65,12 +73,22 @@ for my $id (sort numeric_sort   keys %config) {
 	my $tag = $config{ $id }->{ tag };
 	next unless $tag;
 	next unless defined  $tv{$tag};
-	print_config_item (  $tv{ $tag } , $config{ $id } , $printf_fmt );
+	my $enums = 'nada';
+	if ( defined (my $enum_p = $config{ $id }->{ enum } ) ) {
+		$enums = '<font size="-2">' ;
+		$enums .= join ( '<br>', @$enum_p ) ;
+		$enums .= "<br>&nbsp;";
+		$enums .= '</font>';
+	}
+	print '<tr valign="top">';
+	print_config_item (  $tv{ $tag } , $config{ $id } , $printf_fmt   );
+	printf "<td>%s</td></tr>\n", $enums ;
+
 }
 print "</table>\n";
 
-# debug ( [    \%tv, $sf_modified, $tp_modified , $hr_modified, \%config_by_tag , \%config ] ,
-#        , [ qw(  *tv *sf_modified  *tp_modified   *hr_modified  *config_by_tag    *config   ) ] )	;
+debug ( [    \%tv, $sf_modified, $tp_modified , $hr_modified, \%config_by_tag , \%config ] ,
+        , [ qw(  *tv *sf_modified  *tp_modified   *hr_modified  *config_by_tag    *config   ) ] )	;
 
 print end_html();
 
