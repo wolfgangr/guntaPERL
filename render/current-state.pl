@@ -91,8 +91,8 @@ for my $id (sort numeric_sort   keys %config) {
 }
 print "</table>\n";
 
-debug ( [    \%tv, $sf_modified, $tp_modified , $hr_modified, \%config_by_tag , \%config ] ,
-        , [ qw(  *tv *sf_modified  *tp_modified   *hr_modified  *config_by_tag    *config   ) ] )	;
+# debug ( [    \%tv, $sf_modified, $tp_modified , $hr_modified, \%config_by_tag , \%config ] ,
+#         , [ qw(  *tv *sf_modified  *tp_modified   *hr_modified  *config_by_tag    *config   ) ] )	;
 
 print end_html();
 
