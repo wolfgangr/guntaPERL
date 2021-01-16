@@ -15,20 +15,22 @@ This repo documents my endeavour to
 
 Goal is to understand the behaviour of the system over time for optimization and to identify undesired states.
 
-The manufacturerer offers a clude based web service and mobile client.  
-I was not satisfied with that, because of  
+The manufacturerer offers a cloud based web service and mobile client.  
+I was not satisfied with the plotting capabilities of both, because of  
 * limited data subset
-* only one item plotted per chart, so it's difficult to undestand interrelations 
+* only one item plotted per chart, so it's difficult to undestand functional interrelations 
 * long, odd, changing plot interval (sth. like e. g. 53 min)
-* history is lost after some days and after a restart of the controller
+* all history is lost after some days and after a restart of the controller
 
-However, the manufacturer's tools allow some remote alarm and control of the cauldron, which I do not intend to implement.  
-I see no reason why not to use those tools in parallel with my charting framework.  
+However, the manufacturer's tools allow some remote alarm and control of the cauldron, which I like and do not intend to implement.  
+I can't see a reason why not to use those tools in parallel with my charting framework.  
 
-There are different solutions out there, e.g. in the realm of home management frameworks (FHEM, just to name one) or generic data collectors (cacti beeing the best known one).  
+There are different logging and plotting solutions out there, e.g. in the realm of home management frameworks (FHEM, just to name one) or generic data collectors (cacti beeing the best known one).  
 May be, they may provide a faster way towards some simple subset of what I have done.  
 To my impression, at a certain level of customization, they provide more obstacles in form of an "obscurity" level.  
 In the end, any unconstrained turing capable generic programming language inevitably provides more flexibility.  
+
+Last but not least, I was looking for a nice training environment to understand elaborated rrd configuration.  
 
 ## Setup
 
@@ -43,50 +45,66 @@ The key seems to be derived from the serial number, so there is no point in reus
 Earlier versions were reported to provide data access witout a special key or with a generic one, but I was not able to reproduce such instructions.  
   
 There are five addresses I worked with, belonging to two slightly different API:  
-* `http://w.x.y.z/daqdesc.cgi?key=....` \n separated live data  
-* `http://w.x.y.z/daqdata.cgi?key=....` \n separated mapping  
-* `http://w.x.y.z/ext/daqdesc.cgi?key=....` JSON live data   
-* `http://w.x.y.z/ext/daqdata.cgi?key=....` JSON mapping  
-* `http://w.x.y.z/par.cgi` static config info  
+* `http://w.x.y.z/daqdesc.cgi?key=....` \n separated mapping information   
+* `http://w.x.y.z/daqdata.cgi?key=....` \n separated live data
+* `http://w.x.y.z/ext/daqdesc.cgi?key=....` JSON mapping 
+* `http://w.x.y.z/ext/daqdata.cgi?key=....` JSON live data   
+* `http://w.x.y.z/par.cgi` skd. of exhaustive static config info, which seems loosly be related to the protocol...
   
 I started with the JSON API, because the format allowed an one-line-`wget`-command in `crontab` to collect log files.  
-It was until I started parsing, rrd logging and pretty printing when I found out that the JSON API was only a subset of the newline API.  
-While all parameters that refer to building installation are there, essential internal cauldron and chip feed information is missing.  
+It was until I started parsing, rrd logging and pretty printing when I found out that the **JSON API** was only a **subset** of the newline API.  
+While all parameters that refer to building installation are there (upper half of screenshot above), essential internal cauldron and chip feed information (botom of the picture) is missing.  
   
 So I switched to the newline-API halfway during the project.  
 Files tagged with `plain...` refer to the newline-API.   
-Half baken brethen of those witout the plain-tagging may still be lingering around.
-I kept the JSON versions for reference.   
+Half baken bretheren of those witout the plain-tagging may still be lingering around.
+I kept the JSON versions for reference and maybe later reuse.  
 
-## Key elements of the code:
+## Key elements of the code
+### Configuration
 
 `config_plain.pm` is where core information of the protocol is kept.  
-It keeps structure in sync between rrd, the logger and the renderer.   
+It keeps **structure in sync** between rrd, the logger and the renderer.   
 Configuration at the 'edge' of the installation, however, may be kept in a decentralize manner in the header area of any of the scripts.
 
 The config is derived from the JSON daqdesc, but completed and added up with further processing decisions.
 The goal was to change fields, rrds, plotting style etc without fiddling in the hot code.
-I think I made that for some 80 % or so. 
+My gutt feels that I made that for some 80 % or so. I'd not expect seamless work in a fresh setup.
 
 The config is ~~included~~ require'd into most other parts.
-So I must be sure it meets PERL syntax on any chages.  
+So I must be sure it meets **PERL syntax** on any chages.  
 I used `parse-confi-plain.pl` to check for syntax errors and to debug available config data structures.  
   
-`library.pm` - well, a library, as it says.  
+### `library.pm` - well, a library, as it says.  
   
-There are some `config-foo-bar.sh|pl` perl or shell scripts which setup rrd databases rendering rrd graph templates and the like.  
-I used them as a reproducible way for setup and controlled modification.  
-Once stable, I prefer to set them as not executable as a protecion against accidential deletion of rrd.  
-  
-The main worker is `log2rrd.pl`.  
-It polls the cauldron controller once per minute and logs into several rrd databases to be created under `rrd/`.  
-After some trials I ended up with 60 s polling rate.  
-It proove to be a good idea to have the step, the DS hearbeat and the first RRA consoildation in sync with that.  
-Log times are rounded to even fractions of minutes.  
+### Generator scripts
 
-Why? Half of the variables are boolean states or integer encoded enums.  
-Without proper alignment, I end up with fractional values in the rrd, even if choosing LAST as CF C_onsolidations F_unction.  
-For reasons: RTFM rrd.  
+There are some `config-foo-bar.sh|pl` perl or shell scripts which **setup rrd** databases rendering **rrd graph templates** and the like.  
+I used them as a reproducible way for setup and controlled modification.  
+They are supposed to run only at setup time, or repeatedly during development cycles.  
+Once stable, I prefer to set them as **not executable** as a protection against accidential deletion of rrd.  
+
+### polling and logging demon
+
+The main worker is `log2rrd.pl`.  
+It polls the cauldron controller's http server once per minute and logs into several rrd databases to be created under `rrd/`.  
+After some trials I ended up with **60 s polling rate**.  
+It proove to be a good idea to have the **step**, the DS **hearbeat** and the first level of **RRA consolidation** CF **in sync** with that rate.  
+**Log times** are rounded to integer multiples of **minutes**.  
+
+Why? Half of the variables are **boolean** states or integer encoded **enums**.  
+Without proper alignment, I end up with **fractional values** in the rrd, even if choosing LAST as CF C_onsolidations F_unction.  
+For reasons: RTFM rrd. e.g. this one http://rrdtool.vandenbogaerdt.nl/process.php at least 3 times...  
+And believe the boss: http://rrd-mailinglists.937164.n2.nabble.com/How-To-Do-A-State-Change-Log-Graph-td1078946.html#a1079016  
+
+When I started with a 5 min polling interval, I had called it by cron each time.  
+At a 60 s interval, I could see considerable CPU load due to PERL startup overhead.  
+I could cut this down by running the poller as a background demom.  
+Now there is a `watchdog.sh` `cron` at some interval to check and - if necessary - revivify the poller.  
+
+The watchdog relies on some `rrdtest.sh` I keep reusing from other projects and finally installed in `/usr/bin`.  
+github search my account may help to find it.
+
 
 ## Web Visualisation 
 
@@ -98,24 +116,34 @@ It must be configured as `CGI` with perl enabled in the web server. I use `light
 Temporary rrd graphs are stored in `/render/tmp`.  
 This must be readable and writable by the web server. Group acces for `www-data` group works fine on my out-of-the-box-debian.  
 Newer versions of charts overwrite older ones. This saves the need of temp cleanup.  
-It is not really thread save, but that does not hurt in a low frequency machine surveillance environment.  
+This is not really thread save, but that does not hurt in a low frequency machine surveillance environment.  
   
-The render script relies on `rrd-graph` templates, which are basically rrdtool graph commands with some leading lines omitted.   
-The renderer adds rrd filename, start time, end time and a default chart size, as well as some vertical lines as event markers.  
-The `test-...` templates are edited manually, derived from drraw created boiler plates.  
+The render script relies on `rrd-graph` templates, which are nothing more than rrdtool graph commands with some leading lines omitted:   
+When browsing through time, the renderer adds rrd filename, start time, end time and a default chart size, as well as some vertical lines as event markers.  
 
-The `gen-...` template are generated by scripts in the main dir. I used this for the somewhat more complicated task to visualize the boolean and the enum fields.  To tune them, I use four screens with vi on the creator, a console to run the creator at every reload cycle, a browswer window to view the rendering and a console to grep error messages out of /var/log/messages in case of `internal server error`. That's where I appreciate my dual screen installation...
+The `test-...` templates are edited manually, derived from `drraw` created boiler plates.  
 
-The renderer also includes frames with a human readable list of all current state of variables and a subset of event log, matching the time frame displayed in the charts. They are created by silly little log-range.pl and current-state.pl
+The `gen-...` template are generated by scripts in the main dir. I used this for the somewhat more complicated task to visualize the boolean and the enum fields.  To tune them, I use four screens with vi on the creator, a console to run the creator at every debug cycle, a browswer window to view the rendering result and a console to grep error messages out of /var/log/messages in case of `internal server error`. CGI, you know... That's where I appreciate my dual screen installation...
+
+The renderer also includes frames with a human readable list of all current state of variables and a subset of event log, matching the time frame displayed in the charts. They are created by silly little `log-range.pl` and `current-state.pl`
 
 While I tried to catch worst security holes on the fly, there was no thorough safety planning.  
-I hope I can rely on my LAN safety...   
+I expext some open backdoors and hope I can rely on my LAN security...   
 
+### System requirements
+
+I have it running togehter with a couple of similiar projects on a 10 year old 'thin client' laptop style hardware single core 1200 MHz AMD G-T44R Processor. Mass storage is a 64 GB SSD. It's wise to use `df` and `du` commands and maybe a calculator while playing with rrd configurations.  
+There is 64-bit debian 10.7 on it. Completely headless except bios configuration.  
+All PERL modules used are from debian repo, no CAPN or custom build.  
+
+CPU load is << 5 % during polling and goes close to 100 % for a second or so when browsing charts.  
+So I guess a raspberry could do the job as well, but I haven't tried.  
+Personally, I don't like the idea of runnig rrd on SD-cards. Don't like mass storage, network and peripheral access all sharing the same USB Bus. File systems for 24/7 operations on fragile USB plugs. But all that may be a matter of taste.
 
 
 ## Disclaimer:
 
-This all is alpha-state 'works-for-me'-level-stuff.  
+This is all alpha-state *'works-for-me'*-level-stuff.  
 **NEVER USE THIS IN A REAL WORD ENVIRONMENT!**  
 ... and if you do anyway, don't sue me.
 **Expect stuff going wrong.**  
@@ -128,7 +156,7 @@ I did not explicitly try it, but can we sure that this does not happen by accide
 I's an **oven**, so, in the end, it's supposed to have **fire in it**.  
 And you don't want to have the **fire outside**, do you?  
 There is stuff that may break, and **moving parts (augers, e.g.!) that may hurt people**.  
-Or at least stop working, destroy warranty claims, and whatever other evil things.
+Or at least stop working, destroy warranty claims, keep your freezing and whatever other evil things.
 
 
 
