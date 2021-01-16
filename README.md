@@ -51,9 +51,9 @@ There are five addresses I worked with, belonging to two slightly different API:
 * `http://w.x.y.z/ext/daqdata.cgi?key=....` JSON live data   
 * `http://w.x.y.z/par.cgi` skd. of exhaustive static config info, which seems loosly be related to the protocol...
   
-I started with the JSON API, because the format allowed an one-line-`wget`-command in `crontab` to collect log files.  
-It was until I started parsing, rrd logging and pretty printing when I found out that the **JSON API** delivered only a **subset** of the **newline API**.  
-While all parameters that refer to building installation are there (upper half of screenshot above), essential internal cauldron and chip feed information (botom of the picture) is missing.  
+I started with the JSON API, because this is the ine documented, and the format allowed an one-line-`wget`-command in `crontab` to collect log files.  
+It was until I started parsing, rrd logging and pretty printing when I found out that the **JSON API** delivered only a **subset** of the data available at the **newline API**.  
+While all parameters that refer to building installation are there (upper half of screenshot above), essential internal cauldron and chip feed information (bottom of the picture) is missing.  
   
 So I switched to the newline-API halfway during the project.  
 Files tagged with `plain...` refer to the newline-API.   
@@ -61,19 +61,19 @@ Half baken bretheren of those witout the plain-tagging may still be lingering ar
 I kept that JSON versions for reference and maybe later code recycling.  
 
 ## Key elements of the code
-### Configuration
-
-`config_plain.pm` is where core information of the protocol is kept.  
-It keeps **structure in sync** between rrd, the logger and the renderer.   
-Configuration at the 'edge' of the installation, however, may be kept in a decentralize manner in the header area of any of the scripts.
+### `config_plain.pm` 
+is where core information matching the protocol is kept.  
+It keeps **structure in sync** between the API, rrd, the logger and the renderer.   
+Interface configurations at other 'edges' of the installation, however, may be kept in a decentralize manner in the header area of any of the scripts.
 
 The config is derived from the JSON daqdesc, but completed and added up with further processing decisions.
 The goal was to change fields, rrds, plotting style etc without fiddling in the hot code.
 My gutt feels that I made that for some 80 % or so. I'd not expect seamless work in a fresh setup.
 
-The config is ~~included~~ require'd into most other parts.
+The config is ~~included~~ require'd the PERLie way into most other parts.
 So I must be sure it meets **PERL syntax** on any chages.  
 I used `parse-confi-plain.pl` to check for syntax errors and to debug available config data structures.  
+Key and host name are kept in a separate `secret.pm`, with a github'bed anonymized copy of it.
   
 ### `library.pm` 
 - well, a library, as it's name says.  ...
@@ -85,13 +85,11 @@ I used them as a reproducible way for setup and controlled modification.
 They are supposed to run only at setup time, or repeatedly during development cycles.  
 Once stable, I prefer to set them as **not executable** as a protection against accidential deletion of rrd.  
 
-### polling and logging demon
+### polling and logging demon **`log2rrd.pl`**
 
-The main worker is **`log2rrd.pl`**.  
-It polls the cauldron controller's http server once per minute and logs into several rrd databases to be created under `rrd/`.  
+The main worker. It polls the cauldron controller's http server once per minute and logs into several rrd databases to be created under `rrd/`.  
 After some trials I ended up with **60 s polling rate**.  
-It proove to be a good idea to have the **step**, the DS **hearbeat** and the first level of **RRA consolidation** CF **in sync** with that rate.  
-**Log times** are rounded to integer multiples of **minutes**.  
+It proove to be a good idea to have the **step**, the DS **hearbeat** and the first level of **RRA consolidation** CF **in sync** with that rate. **Log times** are rounded to integer multiples of **minutes**.  
 
 Why? Half of the variables are **boolean** states or integer encoded **enums**.  
 Without proper alignment, I end up with **fractional values** in the rrd, even if choosing LAST as CF C_onsolidation F_unction.  
@@ -112,7 +110,7 @@ There are two tools I keep reusing during different rrd machine surveillance pro
 I decided to throw them into sth. like `/usr/local/bin/`.
 
 #### `rrdtest.pl` 
-is a wrapper of rrdlast and queries the last update of several rrd in a human readable way.  
+is skd of extended frontend to `rrdtool lastupdate` and queries the last update of several rrd in a human readable way.  
 ```
 ~/guntamatic$ ./rrdtest.pl 240 rrd/*.rrd
 ===    gracetime: 240    =    now: 2021-01-16 23:49:32    =    diff: 2021-01-16 23:45:32    ===
@@ -137,6 +135,74 @@ I also like running it as `watch -n1 ./rrdtest.pl *.rrd` on a separate console w
 Thus I always have a look what's ging on, when and what was updated into my rrds and can even cut'n paste field names into edited scripts.
 
 #### `rrd2csv.pl`
+a wrapper to `rrdtool fetch`
+
+```
+$ rrd2csv.pl -h
+/usr/local/bin/rrd2csv.pl:
+
+retrieve data from RRD and output them as CSV to file or STDOUT
+
+usage: /usr/local/bin/rrd2csv.pl db.rrd CF
+  [-s start][-e end][-r res][-a]  [-V valid-rows ]
+  [-f outfile][-x sep][-d delim][-t][-T dttag][-z tz] [-H][-M]   
+  [-v #][-h]
+ 
+
+        for further details, see RRDtool fetch for details
+
+        db.rrd
+                rrd file name to retrieve data from
+
+        CF      rrd CF (AVERAGE,MIN,MAX,LAST)
+
+        -s starttime
+                transparently forwarded to RRDtool, 
+                default NOW - 1 day
+
+        -e endtime
+                transparently forwarded to RRDtool,
+                default NOW
+
+        -r res 
+                resolution (seconds per value)
+                default is highest available in rrd
+
+        -a align
+                adjust starttime to resolution
+
+        -V valid rows
+                preselect rows by NaN'niness
+                (integer) minimum valid fields i.e not NaN per row
+                0 - include all empty (NaN only) rows
+                1 - (default ) at least one not-NaN - don't loose any information
+                up to num-cols - fine tune information vs data throughput
+                negative integers: complement count top down e.g.
+                -1 - zero NaN allowed
+                -2 - one NaN allowed
+
+                        [-f outfile] [-h] [-H] [-x sep] [-d delim]
+
+        -f output file
+                default ist STDOUT if omitted
+
+        -x ;    CSV field separator, default is  ';'
+
+        -d "    CSV field delimiter, default is ''
+
+        -t      include header tag line
+
+        -T foo  header line time tag, default ist 'time'
+
+        -H      translate unixtime to H_uman readable time
+        -M      translate unixtime to M_ySQL timestamps
+        -z foo  set timezone, default is 'local'
+
+        -v int  set verbosity level
+
+        -h      print this message
+```
+
 This allows configurable extraction of rrd data in csv like human and/or machine readable format.  
 I use it in other projects for rrd-to-SQL-upload.  
 It neatly integrates with `mysqlimport`, so cron controlled database sync just requires a couple of bash lines.  
