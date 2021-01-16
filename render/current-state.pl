@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use CGI qw/:standard/;
+use CGI qw/  :standard/;
 use Data::Dumper ;
 use Storable ();
 use Time::Piece;
@@ -45,14 +45,14 @@ my %tv = %$tv_p ;
 # my $printf_fmt = "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n";
 
 my $printf_fmt = "<tr><td>%03d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n";
-my $th  = "<table><tr><td>ID</td><td>K&uuml;rzel</td><td>Wert</td><td>Einheit</td><td>Typ</td><td>Beschreibung</td></tr>\n";
+my $th  = "<table><tr><td>ID</td><td>Kürzel</td><td>Wert</td><td>Einheit</td><td>Typ</td><td>Beschreibung</td></tr>\n";
 
 
 
 # ~~~~~ end of processing, start HTML rendering ~~~~~~~~~~~~~~~
 
-print header();
-print start_html(-title => $title);
+print header(  -type => "text/html", -charset => "UTF-8"   );
+print start_html(-title => $title ,  -encoding => "UTF-8" );
 print h1($title);
 
 print $th ;
