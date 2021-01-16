@@ -45,7 +45,7 @@ my %tv = %$tv_p ;
 # my $printf_fmt = "id=%03d,  (   %10s   ) ,  %s %s , %s,   %s\n";
 
 my $printf_fmt = "<tr><td>%03d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n";
-my $th  = "<table><tr><td>ID</td><td>Kürzel</td><td>Wert</td><td>Einheit</td><td>Typ</td><td>Beschreibung</td></tr>\n";
+my $th  = "<table><tr><th>ID</th><th>Kürzel</th><th>Wert</th><th>Einheit</th><th>Typ</th><th>Beschreibung</th></tr>\n";
 
 
 
@@ -53,24 +53,27 @@ my $th  = "<table><tr><td>ID</td><td>Kürzel</td><td>Wert</td><td>Einheit</td><t
 
 print header(  -type => "text/html", -charset => "UTF-8"   );
 print start_html(-title => $title ,  -encoding => "UTF-8" );
-print h1($title);
+print h3($title);
+
+
+print "<hr>\n";
+printf "Ladezeit: %s = %011d (unixtime) \n",  $hr_modified , $sf_modified  ;
+print "<hr>\n";
 
 print $th ;
-
 for my $id (sort numeric_sort   keys %config) {
 	my $tag = $config{ $id }->{ tag };
 	next unless $tag;
 	next unless defined  $tv{$tag};
 	print_config_item (  $tv{ $tag } , $config{ $id } , $printf_fmt );
 }
-
-
 print "</table>\n";
 
-debug ( [    \%tv, $sf_modified, $tp_modified , $hr_modified, \%config_by_tag , \%config ] ,
-       , [ qw(  *tv *sf_modified  *tp_modified   *hr_modified  *config_by_tag    *config   ) ] )	;
+# debug ( [    \%tv, $sf_modified, $tp_modified , $hr_modified, \%config_by_tag , \%config ] ,
+#        , [ qw(  *tv *sf_modified  *tp_modified   *hr_modified  *config_by_tag    *config   ) ] )	;
 
 print end_html();
+
 
 exit ;
 
