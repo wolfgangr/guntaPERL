@@ -4,7 +4,7 @@ cd ~/guntamatic/
 PROCESS='./log2rrd.pl'
 WATCHED='240 rrd/*.rrd'
 
-STARTER="./$PROCESS"
+STARTER=$PROCESS
 
 LOGFILE='/var/log/wrosner/watchdog_guntamatic.log'
 UPDLOG='/var/log/wrosner/guntamatic-poller.log'
