@@ -3,7 +3,8 @@
 
 ## Example
 
-/images/my-rrd-log-2021-01-15.png
+![screenshot](/images/my-rrd-log-2021-01-15.png)
+
 
 ## Purpose
 
