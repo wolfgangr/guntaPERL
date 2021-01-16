@@ -153,7 +153,7 @@ my $loggrep_qry = sprintf $loggrepper, $numstart, $numend;
 my $loggrep_rsp = `$loggrep_qry`;
 my @event_times = split ('\n', $loggrep_rsp);
 
-DEBUG ( \@event_times);
+# DEBUG ( \@event_times);
 
 # last line contains start and stop line numbers in log file
 my $loggrep_ll = pop @event_times;
@@ -161,12 +161,18 @@ my ($log_evt_first_l , $log_evt_num_l) = split ( ' ',  $loggrep_ll, 2);
 
 # prep url for log section rendering
 # http://kellerkind.rosner.lokal/pl_cgi/guntamatic_render/log-range.pl?start=20&num=100
-my $log_section_url = spritf $log_section_urlator, $log_evt_first_l , $log_evt_num_l ;
+my $log_section_url = sprintf $log_section_urlator, $log_evt_first_l , $log_evt_num_l ;
+# DEBUG ($log_section_url );
 
 # prepare list of vline definitions
 # VRULE:time#color[:[legend][:dashes[=on_s[,off_s[,on_s,off_s]...]][:dash-offset=offset]]]
+my $event_vrule_defs ;
+for my $evt (@event_times) {
+	$event_vrule_defs .= sprintf $log_event_tag , $evt;
+	$event_vrule_defs .= "\n";
+}
 
-
+DEBUG ($event_vrule_defs);
 
 # ===================================== create chart(s) =====================================================
 
