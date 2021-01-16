@@ -15,12 +15,14 @@ my $log = './status.log';
 # spritf and %d do a good job
 
 # tail -n+$2 $1 | head -n$3
+my $title = sprintf "Guntamatic event file log - line # %d ... %d" , $start , ($start + $num -1)  ;
 my $cmd = sprintf "tail -n+%d %s | head -n%d", $start, $log , $num;
 
 
 print header();
-print start_html(-title => 'variable test mit perl CGI');
-print h1('so what');
+print start_html(-title => $title);
+# print h1('so what');
+print "<p>$title</p><hr>\n"; 
 
 print "<pre>";
 # printf "start=%s;<br>\n", $start;
@@ -28,7 +30,7 @@ print "<pre>";
 # printf "cmd=%s;<br>\n", $cmd;
 
 print `$cmd`;
-print "</pre>";
+print "</pre>\n";
 
 # printf "end=%s;\n", param('end');
 
