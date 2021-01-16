@@ -15,26 +15,26 @@ This repo documents my endeavour to
 
 Goal is to understand the behaviour of the system over time for optimization and to identify undesired states.
 
-The manufacturerer offers a cloud based web service and mobile client.  
+The manufacturerer offers a cloud based web service and a mobile client.  
 I was not satisfied with the plotting capabilities of both, because of  
-* limited data subset
-* only one item plotted per chart, so it's difficult to undestand functional interrelations 
+* **limited data subset**
+* **only one item plotted per chart**, so it's difficult to undestand functional interrelations 
 * long, odd, changing plot interval (sth. like e. g. 53 min)
-* all history is lost after some days and after a restart of the controller
+* **all history is lost** after some days and after a restart of the controller
 
 However, the manufacturer's tools allow some remote alarm and control of the cauldron, which I like and do not intend to implement.  
 I can't see a reason why not to use those tools in parallel with my charting framework.  
 
-There are different logging and plotting solutions out there, e.g. in the realm of home management frameworks (FHEM, just to name one) or generic data collectors (cacti beeing the best known one).  
-May be, they may provide a faster way towards some simple subset of what I have done.  
-To my impression, at a certain level of customization, they provide more obstacles in form of an "obscurity" level.  
+There are different logging and plotting solutions out there, e.g. in the realm of home management frameworks (*FHEM*, just to name one) or generic rrd data collectors (*cacti* beeing the best known one).  
+May be, they may provide a flatter early learning curve towards some simple subset of what I have done.  
+To my impression, at a certain level of customization, they provide more obstacles by adding skd. of "obscurity" layer.  
 In the end, any unconstrained turing capable generic programming language inevitably provides more flexibility.  
 
-Last but not least, I was looking for a nice training environment to understand elaborated rrd configuration.  
+Last but not least, I was looking for a nice training environment to understand elaborated `rrd` configuration.  
 
 ## Setup
 
-The cauldron controller has a web interface with DHCP configured by default.
+The cauldron controller has a web interface with DHCP configured by default.  
 There is a MODBUS API as well, but I was perfectly happy with the HTTP API.  
 
 My cauldron's controller runs Sotware v `32f`.   
@@ -52,13 +52,13 @@ There are five addresses I worked with, belonging to two slightly different API:
 * `http://w.x.y.z/par.cgi` skd. of exhaustive static config info, which seems loosly be related to the protocol...
   
 I started with the JSON API, because the format allowed an one-line-`wget`-command in `crontab` to collect log files.  
-It was until I started parsing, rrd logging and pretty printing when I found out that the **JSON API** was only a **subset** of the newline API.  
+It was until I started parsing, rrd logging and pretty printing when I found out that the **JSON API** delivered only a **subset** of the **newline API**.  
 While all parameters that refer to building installation are there (upper half of screenshot above), essential internal cauldron and chip feed information (botom of the picture) is missing.  
   
 So I switched to the newline-API halfway during the project.  
 Files tagged with `plain...` refer to the newline-API.   
 Half baken bretheren of those witout the plain-tagging may still be lingering around.
-I kept the JSON versions for reference and maybe later reuse.  
+I kept that JSON versions for reference and maybe later code recycling.  
 
 ## Key elements of the code
 ### Configuration
@@ -75,35 +75,36 @@ The config is ~~included~~ require'd into most other parts.
 So I must be sure it meets **PERL syntax** on any chages.  
 I used `parse-confi-plain.pl` to check for syntax errors and to debug available config data structures.  
   
-### `library.pm` - well, a library, as it says.  
+### `library.pm` 
+- well, a library, as it's name says.  ...
   
 ### Generator scripts
 
-There are some `config-foo-bar.sh|pl` perl or shell scripts which **setup rrd** databases rendering **rrd graph templates** and the like.  
+There are some `config-foo-bar.sh|pl` perl or shell scripts which **`setup_.*.rrd`** databases, rendering **`*.rrd-graph` templates** and the like.  
 I used them as a reproducible way for setup and controlled modification.  
 They are supposed to run only at setup time, or repeatedly during development cycles.  
 Once stable, I prefer to set them as **not executable** as a protection against accidential deletion of rrd.  
 
 ### polling and logging demon
 
-The main worker is `log2rrd.pl`.  
+The main worker is **`log2rrd.pl`**.  
 It polls the cauldron controller's http server once per minute and logs into several rrd databases to be created under `rrd/`.  
 After some trials I ended up with **60 s polling rate**.  
 It proove to be a good idea to have the **step**, the DS **hearbeat** and the first level of **RRA consolidation** CF **in sync** with that rate.  
 **Log times** are rounded to integer multiples of **minutes**.  
 
 Why? Half of the variables are **boolean** states or integer encoded **enums**.  
-Without proper alignment, I end up with **fractional values** in the rrd, even if choosing LAST as CF C_onsolidations F_unction.  
+Without proper alignment, I end up with **fractional values** in the rrd, even if choosing LAST as CF C_onsolidation F_unction.  
 For reasons: RTFM rrd. e.g. this one http://rrdtool.vandenbogaerdt.nl/process.php at least 3 times...  
-And believe the boss: http://rrd-mailinglists.937164.n2.nabble.com/How-To-Do-A-State-Change-Log-Graph-td1078946.html#a1079016  
+And believe the boss:  
+http://rrd-mailinglists.937164.n2.nabble.com/How-To-Do-A-State-Change-Log-Graph-td1078946.html#a1079016  
 
 When I started with a 5 min polling interval, I had called it by cron each time.  
+I had to learn that I miss loads of information regarding the ignition process, chip feeding or pump control.
 At a 60 s interval, I could see considerable CPU load due to PERL startup overhead.  
 I could cut this down by running the poller as a background demom.  
 Now there is a `watchdog.sh` `cron` at some interval to check and - if necessary - revivify the poller.  
 
-The watchdog relies on some `rrdtest.sh` I keep reusing from other projects and finally installed in `/usr/bin`.  
-github search my account may help to find it.
 
 ### Widget and Gadgets
 
@@ -111,7 +112,7 @@ There are two tools I keep reusing during different rrd machine surveillance pro
 I decided to throw them into sth. like `/usr/local/bin/`.
 
 #### `rrdtest.pl` 
-is a wrapper of rrdlast and queries the last update of rrd in a human readable way.  
+is a wrapper of rrdlast and queries the last update of several rrd in a human readable way.  
 ```
 ~/guntamatic$ ./rrdtest.pl 240 rrd/*.rrd
 ===    gracetime: 240    =    now: 2021-01-16 23:49:32    =    diff: 2021-01-16 23:45:32    ===
@@ -129,50 +130,58 @@ is a wrapper of rrdlast and queries the last update of rrd in a human readable w
 2021-01-16 23:49:00     |       55.96 0 0 0 0 0 0 0 
  =============== DONE - errors: 0 ==============
  ```
-It has a configurable "gracetime" and reports the state upon return to the caller. This makes it handy for use in the watchdog, to figure out whether updates are overdue.
-
-I also like running it as `watch -n1 ./rrdtest.pl *.rrd` on a separate console window when debugging rrd data capture, like the poller.  
-Thus I always have a look what's ging on, when an what was updated and can even cut'n paste field names into edited scripts.
+It has a configurable "gracetime" and reports the state upon return to the caller.  
+This is essential for my watchdog, to figure out whether updates are overdue.  
+  
+I also like running it as `watch -n1 ./rrdtest.pl *.rrd` on a separate console window when debugging rrd data capture, like the poller. 
+Thus I always have a look what's ging on, when and what was updated into my rrds and can even cut'n paste field names into edited scripts.
 
 #### `rrd2csv.pl`
 This allows configurable extraction of rrd data in csv like human and/or machine readable format.  
 I use it in other projects for rrd-to-SQL-upload.  
-It neatly integrates with `mysqlimport`, so database sync just needs a couble of bash lines.  
+It neatly integrates with `mysqlimport`, so cron controlled database sync just requires a couple of bash lines.  
 
 
 ### Web Visualisation 
 
-is provided by the `guntamatic.pl` script in  `/render`.
+is provided by the `guntamatic.pl` script in  `/render`.  
 It allows easy and fast moving and zooming through time scale.
 
 It must be configured as `CGI` with perl enabled in the web server. I use `lighttpd`.  
   
 Temporary rrd graphs are stored in `/render/tmp`.  
-This must be readable and writable by the web server. Group acces for `www-data` group works fine on my out-of-the-box-debian.  
+This must be readable and writable by the web server.  
+Group acces for `www-data` group works fine on my out-of-the-box-debian.  
 Newer versions of charts overwrite older ones. This saves the need of temp cleanup.  
 This is not really thread save, but that does not hurt in a low frequency machine surveillance environment.  
   
-The render script relies on `rrd-graph` templates, which are nothing more than rrdtool graph commands with some leading lines omitted:   
-When browsing through time, the renderer adds rrd filename, start time, end time and a default chart size, as well as some vertical lines as event markers.  
+The render script relies on `rrd-graph` templates, which are nothing else but rrdtool graph commands with some leading lines omitted:   
+When browsing through time, the renderer adds rrdtool command w/ options, rrd filename, start time, end time and a default chart size, as well as some vertical lines as event markers.  
 
 The `test-...` templates are edited manually, derived from `drraw` created boiler plates.  
 
-The `gen-...` template are generated by scripts in the main dir. I used this for the somewhat more complicated task to visualize the boolean and the enum fields.  To tune them, I use four screens with vi on the creator, a console to run the creator at every debug cycle, a browswer window to view the rendering result and a console to grep error messages out of /var/log/messages in case of `internal server error`. CGI, you know... That's where I appreciate my dual screen installation...
+The `gen-...` template are generated by scripts in the main dir. I used this for the somewhat more complicated task to visualize the boolean and the enum fields.  
+To tune them, I use four screens 
+* one with vi on the creator, 
+* a console to run the creator at every debug cycle, 
+* a browswer window to view the rendering result 
+* a console to grep error messages out of /var/log/messages in case of `internal server error`.  
+CGI, you know... That's where I appreciate my dual screen installation...
 
-The renderer also includes frames with a human readable list of all current state of variables and a subset of event log, matching the time frame displayed in the charts. They are created by silly little `log-range.pl` and `current-state.pl`
+The renderer also produces frames with a human readable list of all current state of variables and a subset of event log, matching the time frame displayed in the charts. They are created by silly little `log-range.pl` and `current-state.pl`
 
-While I tried to catch worst security holes on the fly, there was no thorough safety planning.  
-I expext some open backdoors and hope I can rely on my LAN security...   
+While I tried to catch some worst security holes on the fly, there was no thorough safety planning.  
+I expect some open backdoors and hope I can rely on my LAN security...   
 
 ### System requirements
 
-I have it running togehter with a couple of similiar projects on a 10 year old 'thin client' laptop style hardware single core 1200 MHz AMD G-T44R Processor. Mass storage is a 64 GB SSD. It's wise to use `df` and `du` commands and maybe a calculator while playing with rrd configurations.  
-There is 64-bit debian 10.7 on it. Completely headless except bios configuration.  
-All PERL modules used are from debian repo, no CAPN or custom build.  
+I have it running togehter with a couple of similiar projects on a 10 year old 'thin client' laptop style hardware single core 1200 MHz AMD G-T44R Processor and 4GB RAM. Mass storage is a 64 GB SSD. However, It's wise to use `df` and `du` commands and maybe a calculator while playing with rrd configurations.  
+There is 64-bit debian 10.7 on it. Completely headless except for bios configuration.  
+All PERL modules used are from debian repo, no CPAN or custom build.  
 
 CPU load is << 5 % during polling and goes close to 100 % for a second or so when browsing charts.  
 So I guess a raspberry could do the job as well, but I haven't tried.  
-Personally, I don't like the idea of runnig rrd on SD-cards. Don't like mass storage, network and peripheral access all sharing the same USB Bus. File systems for 24/7 operations on fragile USB plugs. But all that may be a matter of taste.
+Personally, I don't like the idea of runnig rrd on SD-cards. Don't like mass storage, network and peripheral access all sharing the same USB Bus. File systems for 24/7 operations mounted over fragile USB plugs. But all that may be a matter of taste.
 
 
 ## Disclaimer:
@@ -186,11 +195,11 @@ Don't expect seamless installation out of the box.
 Do not even try it without sound knowledge of linux, perl, rrd, shell script, CGI and networking.  
   
 The Guntamatic-**API allows writes to the controller** as well.  
-I did not explicitly try it, but can we sure that this does not happen by accident?  
+I did not explicitly try it, but can we be sure that this does not happen by accident?  
 I's an **oven**, so, in the end, it's supposed to have **fire in it**.  
 And you don't want to have the **fire outside**, do you?  
-There is stuff that may break, and **moving parts (augers, e.g.!) that may hurt people**.  
-Or at least stop working, destroy warranty claims, keep your freezing and whatever other evil things.
+There is stuff that may break, and **moving parts (conveyor augers, e.g.!) that may seriously hurt people**.  
+Or at least stop working, destroy warranty claims, keep you freezing all day and whatever other evil things.
 
 
 
