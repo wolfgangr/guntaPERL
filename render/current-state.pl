@@ -47,8 +47,10 @@ my %tv = %$tv_p ;
 my $printf_fmt = "<td>%03d&nbsp;</td><th>&nbsp;%s&nbsp;</th><td>&nbsp;<b>%s</b>&nbsp;</td><td>%s</td>"
 	#. "<td>foo</td>"
 	. "<td>%s</td><td>&nbsp;%s</td>"
-	. "<td>%s</td>" ;
+	# . "<td>%s</td>" ;
 	# . "</tr>\n";
+     ;
+
 my $th  = "<table><tr><th>ID</th><th>Kürzel</th><th>Wert</th><th>Einheit</th>"
 #	. "<th>bar</th>"
 	. "<th>Typ</th><th>Beschreibung</th>" 
@@ -73,16 +75,18 @@ for my $id (sort numeric_sort   keys %config) {
 	my $tag = $config{ $id }->{ tag };
 	next unless $tag;
 	next unless defined  $tv{$tag};
-	my $enums = 'nada';
+	my $enums = '';
 	if ( defined (my $enum_p = $config{ $id }->{ enum } ) ) {
-		$enums = '<font size="-2">' ;
-		$enums .= join ( '<br>', @$enum_p ) ;
-		$enums .= "<br>&nbsp;";
-		$enums .= '</font>';
+		$enums = '<td><font size="-2">' ;
+		$enums .= join ( ' - ', @$enum_p ) ;
+		# $enums .= "<br>&nbsp;";
+		$enums .= '</font></td>';
 	}
 	print '<tr valign="top">';
 	print_config_item (  $tv{ $tag } , $config{ $id } , $printf_fmt   );
-	printf "<td>%s</td></tr>\n", $enums ;
+	# printf "<td>%s</td></tr>\n", $enums ;
+	print $enums ;
+	print "</tr>\n";
 
 }
 print "</table>\n";

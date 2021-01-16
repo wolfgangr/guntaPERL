@@ -263,11 +263,20 @@ print "</table>\n";
 
 # frame for status display and may be more
 
-print <<"EOF_FRAMESET";
-<frameset cols="200, *">
-<frame src="/pl_cgi/guntamatic_render/current-state.pl" name="status">
-</frameset>
-EOF_FRAMESET
+
+my $furl ="./current-state.pl";
+
+
+printf <<"EOF_FRAME" , $furl, $furl ;
+<iframe src="%s" height="300" width="1200"  name="status Variablen">
+  <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen:
+  Sie können die eingebettete Seite über den folgenden Verweis aufrufen: 
+  <a href="%s">Status Variablen</a>
+  </p>
+</iframe>
+EOF_FRAME
+
+
 
 goto ENDHTML ;
 # ~~~~~~~~~~ rrd time debug
