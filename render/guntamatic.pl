@@ -165,14 +165,23 @@ my $log_section_url = sprintf $log_section_urlator, $log_evt_first_l , $log_evt_
 # DEBUG ($log_section_url );
 
 # prepare list of vline definitions
-# VRULE:time#color[:[legend][:dashes[=on_s[,off_s[,on_s,off_s]...]][:dash-offset=offset]]]
-my $event_vrule_defs ;
+# iVRULE:time#color[:[legend][:dashes[=on_s[,off_s[,on_s,off_s]...]][:dash-offset=offset]]]
+my $rrd_width =  param('width') ? param('width') : 400 ; # the rrd builtin default
+my $event_min_sec = $event_min_px  *  $interval / $rrd_width ;
+
+my @event_vrule_defs ;
+my $evt_rendered = 0;
+
 for my $evt (@event_times) {
-	$event_vrule_defs .= sprintf $log_event_tag , $evt;
-	$event_vrule_defs .= "\n";
+	
+	next if ($evt - $evt_rendered < $event_min_sec) ;
+	$evt_rendered = $evt;
+
+	push @event_vrule_defs , ( sprintf $log_event_tag , $evt) ;
+	# $event_vrule_defs .= "\n";
 }
 
-DEBUG ($event_vrule_defs);
+# DEBUG (\@event_vrule_defs);
 
 # ===================================== create chart(s) =====================================================
 
