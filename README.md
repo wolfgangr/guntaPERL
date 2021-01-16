@@ -105,8 +105,42 @@ Now there is a `watchdog.sh` `cron` at some interval to check and - if necessary
 The watchdog relies on some `rrdtest.sh` I keep reusing from other projects and finally installed in `/usr/bin`.  
 github search my account may help to find it.
 
+### Widget and Gadgets
 
-## Web Visualisation 
+There are two tools I keep reusing during different rrd machine surveillance projects.   
+I decided to throw them into sth. like `/usr/local/bin/`.
+
+#### `rrdtest.pl` 
+is a wrapper of rrdlast and queries the last update of rrd in a human readable way.  
+```
+~/guntamatic$ ./rrdtest.pl 240 rrd/*.rrd
+===    gracetime: 240    =    now: 2021-01-16 23:49:32    =    diff: 2021-01-16 23:45:32    ===
+--- [ rrd/status.rrd ] ---------------------------------  
+        OK  (32s)       |  prog_main prog_HK1 prog_HK2 enbl opmode S_op SP_buf0 SP_hw0 S_P1 S_P2 op_hr
+2021-01-16 23:49:00     |       1 4 4 1 0 0 0 0 1 1 1649 
+--- [ rrd/statusX.rrd ] ---------------------------------  
+        OK  (32s)       |  fault0 fault1 frflp level stb tks1 ign_vnt ign_ht
+2021-01-16 23:49:00     |       U U 1 1 1 1 0 0 
+--- [ rrd/temps.rrd ] ---------------------------------  
+        OK  (32s)       |  pc_buf pc_pwr CO2 T_cald T_hw0 T_buf_top T_buf_bot T_out T_P1 T_P2
+2021-01-16 23:49:00     |       27 0 17.98 67.63 63.03 59.61 33.95 -1.24 46.29 39.47 
+--- [ rrd/tempsX.rrd ] ---------------------------------  
+        OK  (32s)       |  T_ret pc_exh pc_vent pc_stok I_stok pc_aug1 I_aug1 pc_grt
+2021-01-16 23:49:00     |       55.96 0 0 0 0 0 0 0 
+ =============== DONE - errors: 0 ==============
+ ```
+It has a configurable "gracetime" and reports the state upon return to the caller. This makes it handy for use in the watchdog, to figure out whether updates are overdue.
+
+I also like running it as `watch -n1 ./rrdtest.pl *.rrd` on a separate console window when debugging rrd data capture, like the poller.  
+Thus I always have a look what's ging on, when an what was updated and can even cut'n paste field names into edited scripts.
+
+#### `rrd2csv.pl`
+This allows configurable extraction of rrd data in csv like human and/or machine readable format.  
+I use it in other projects for rrd-to-SQL-upload.  
+It neatly integrates with `mysqlimport`, so database sync just needs a couble of bash lines.  
+
+
+### Web Visualisation 
 
 is provided by the `guntamatic.pl` script in  `/render`.
 It allows easy and fast moving and zooming through time scale.
