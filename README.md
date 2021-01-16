@@ -1,5 +1,10 @@
 # Guntamatic data logging
 
+
+## Example
+
+/images/my-rrd-log-2021-01-15.png
+
 ## Purpose
 
 This repo documents my endeavour to
