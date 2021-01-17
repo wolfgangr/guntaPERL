@@ -95,4 +95,17 @@ EOF_UF_TPL
 
 
 # foo 
+exit ;
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# sub write to file ( $string, $filename)
+sub write_to_file {
+	my ($str , $filename) = @_ ;
+	open($FH, '>', $filename) or die $!;
+	print $FH $str;
+	close($FH);
+
+}
+
 
