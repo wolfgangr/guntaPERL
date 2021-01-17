@@ -32,7 +32,7 @@ print "unit_file: $unit_file \n";
 print "setup_dir: $setup_dir \n"; 
 print "base_dir:  $base_dir \n" ;
 
-die "DEBUG";
+# die "DEBUG";
 
 
 
