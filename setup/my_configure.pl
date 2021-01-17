@@ -19,11 +19,14 @@ my $unit_dir = "/etc/systemd/system";  # this is OK for debian, on other systems
 
 my $unit_file = "$servicename.service";
 
-my $helpers = qw(rrd2csv.pl rrdtest.pl rnd_sleep.sh);
+my @helpers = qw(rrd2csv.pl rrdtest.pl rnd_sleep.sh);
 my $helper_dir = "/usr/local/bin"; 
 
 my $setup_dir= Cwd::getcwd;
 my $base_dir= Cwd::abs_path( $setup_dir . '/..');  
+
+my $install_helpers = "ffoo bar tralalal\n"; 
+
 
 print "unit_file: $unit_file \n";
 print "setup_dir: $setup_dir \n"; 
@@ -34,7 +37,7 @@ die "DEBUG";
 
 
 my $installer_template = <<"EOF_INSTALLER";
-cp -i ./$unit_file $unit_dir/$unit_ifile
+cp -i ./$unit_file $unit_dir/$unit_file
 $install_helpers
 
 systemctl daemon-reload
@@ -67,7 +70,7 @@ do
 done
 EOF_SCRIPT_TPL
 
-my $unit_file_template = << "EOF_UF_TPL";i
+my $unit_file_template = << "EOF_UF_TPL";
 #  see man systemd.service — Service unit configuration
 [Unit]
 Description=Guntamatic data logger 
@@ -93,6 +96,20 @@ TimeoutStopSec=30
 WantedBy=multi-user.target
 EOF_UF_TPL
 
+my $cleanup_template = << "EOF_CLEANUP";
+rm -i $unit_file
+rm -i install.sh
+rm -i cleanup.sh
+
+EOF_CLEANUP
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+write_to_filex ($unit_file_template, $unit_file);
+write_to_filex ($installer_template, 'install.sh');
+write_to_filex ($cleanup_template , 'cleanup.sh');
+
+
 
 # foo 
 exit ;
@@ -100,11 +117,12 @@ exit ;
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # sub write to file ( $string, $filename)
-sub write_to_file {
+sub write_to_filex {
 	my ($str , $filename) = @_ ;
-	open($FH, '>', $filename) or die $!;
+	open(my $FH, '>', $filename) or die $!;
 	print $FH $str;
 	close($FH);
+	chmod 755, $filename;
 
 }
 
