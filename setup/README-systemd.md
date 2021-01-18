@@ -72,10 +72,10 @@ For the rest, see the watchdoc section.
 The **executable** called by systemd.  
 Just **spawns the watchdog and the logger**.  
 From infamous cron environment acrobatics, only path config is left.  
-And even this might go away.  cut executable lines from 5 to 2.  
+And even this might go away, cutting executable lines from 5 to 2.  
 
 #### `> /dev/null` 
-proved handy to keep the worker script easily debugabble outside of the systemd configuration.  
+It proved handy to keep the worker script easily debugabble outside of the systemd configuration.  
 Just print serious debug to STDERR, and it will be logged in demon state as well.  
 All verbose stuff goes to STDOUT.  
 And if we really want debug in demon state, just remove the redirection to clobber /var/log/syslog.
@@ -86,26 +86,29 @@ I tried returnig to the caller by forking aka `log2rrdpl &` as well  , but this 
 ### `watchdog.pl`
 I replaced the shell script `watchdog.sh` from the cron machine by a tiny little perl script.  
 It's written as infinite - sleeping-most-of-the-time - called-once demon.  
-So there is not process creation overhead. It's hard to find in in `top` at all.  
+So there is no iterative process creation overhead. It's hard to find in in `top` at all.  
 
 Functionally it does the same thing, at much higher rate, and presumably much lower system load:  
-Everey once a while aka `$looptime` seconds, it calls a `rrdupdate last` on all `@watched` databases in `rrddir`.  
+Everey once a while aka `$looptime` seconds, it calls a `rrdupdate last` on all `@watched` databases in `$rrddir`.  
 If the **last update is younger than `gracetime`**, anything is assumed to **work well**.  
 This finding is reported to `systemd` by issueing **`systemd-notify 'WATCHDOG=1'`**.  
 
 The first time such a succesful update is found, an extra **`"systemd-notify 'READY=1'`** is reported before.  
-Due to the matching **`Type=notify`** clause in the unit file this is when systemd regards our guntamatic.service successfully up and running.  
-When we call eg `sudo systemctl start guntamatic.service`, this call will block until systemd receives this `READY=1`.  
- - until `TimeoutStartSec=180` is over or impatient user hits <^C>.  
+Due to the matching **`Type=notify`** clause in the unit file this is when `systemd` considers our **`guntamatic.service`** successfully **up and running**.  
+When we call eg `sudo systemctl start guntamatic.service`, this call will block until systemd receives this `READY=1` -   
+until `TimeoutStartSec=180` is over or the impatient user hits <^C>.  
 
 If anything ist fine, this is just a matter of seconds.  
-This is why I added some test polling rate `$loopt_onfail`  to speed op detection of succesful start.  
+This is why I added some test polling rate `$loopt_onfail`  to speed up detection of succesful start.  
 
 ## watchdog timing
 We query our caouldron twice a minute add odd times, but log it with time rounded down to whole minutes.  
-So every minute, at sec 23 (in my test setting), we get new values, which, however, are already valued as 23 s old.  
+So, every minute, at sec 23 (in my test setting), we get new values, which, however, are already valued as 23 s old.  
 The next value is not earlier than at second 83. Thus, `$gracetime = 120` allow for just one missing read.  
-In a crowded, instable environment, this may be to short and trigger unnecessary restarts.  
+In a crowded, instable environment, this may be too short and trigger unnecessary restarts.  
+Be prudent and watch log files.  
+
+Provided succesful logging, the watchdog reports 'no need to worry' aka `WATCHDOG=1` every `$looptime = 20`seconds. 
 
 Once updates grow overdue, it takes a maximum of `$looptime = 20` for the watchdog to find out and stop reporting `WATCHDOG=1` to systemd.  
 There we have `WatchdogSec=60` systemd will wait before it tries to reastart everything.  
@@ -115,11 +118,11 @@ Once restart is triggered, `SIGTERM` is sent to all process in `KillMode=control
   
 After another `RestartSec=20` systemd tries to start afreash again.  
 Nothing special, but simple and tested.  
-Oh had I only tried this before writng my `watchdog.sh`....
+Oh had I only tried this before writing my `watchdog.sh`....
 
-There may be some default limit and retry slow down.  
+There may be some default limit and retry slow down values.  
 I did not want to screw my system to produce test cases.  
-But may be, when the cauldron or the LAN returns back to service after some downtime, it may take some time or even manual action to bring loggin up again.
+But may be, when the cauldron or the LAN returns back to service after some extended downtime, it may take some time or even manual action to bring loggin up again.
 Just to keep in mind....
 
   
