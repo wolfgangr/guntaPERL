@@ -119,7 +119,9 @@ for my $rrd ( sort keys %RRD_list) {
         } 
 
 	next unless ( -f $rrdfile );
-	RRDs::update($rrdfile, '--template', $rrd_template, $rrd_valstr);
+	# RRDs::update($rrdfile, '--template', $rrd_template, $rrd_valstr);
+	# don't clobber my log file
+	RRDs::update($rrdfile,  '--skip-past-updates' ,  '--template', $rrd_template, $rrd_valstr);
 	if ( RRDs::error ) {
 		printf STDERR ( "error updating RRD %s: %s \n", $rrdfile , RRDs::error ) ;
 		# die "rrd update error";

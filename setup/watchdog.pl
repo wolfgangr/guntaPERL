@@ -43,7 +43,7 @@ while (1) {
 		my $age = time() - $last;
 		if ( $age > $gracetime ) {
 			$overdue_cnt++;
-			printf( $logstring, sprintf( " file %s overdue - age = %d ", $rrdfile, $age) )  ;
+			# printf( $logstring, sprintf( " file %s overdue - age = %d ", $rrdfile, $age) )  ;
 
 		}
 	}
