@@ -1,3 +1,19 @@
+# how to use:
+
+first, read disclamer!
+
+```
+./my_configure.pl
+sudo ./install.sh
+```
+either 
+* be happy
+* reinstall your system
+* start debugging
+good luck!
+
+
+
 # `systemd` setup machine
 
 This is my first `systemd` start-stop configuration.  
