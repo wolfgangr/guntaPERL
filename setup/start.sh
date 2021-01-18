@@ -3,20 +3,20 @@
 # systemd starter script
 
 SCRIPTDIR=`dirname "$0"`
-echo $SCRIPTDIR
+# echo $SCRIPTDIR
 cd $SCRIPTDIR
 
 # spawn our associated babysitter
 ./watchdog.pl &
 
 # not sure what environment we get from systemd
-echo $PATH
-pwd
+# echo $PATH
+# pwd
 cd ..
 # source /etc/profile
 # source ~/.profile
-echo $PATH
-pwd
+# echo $PATH
+# pwd
 # launch the real thing
 # SCRIPTDIR/../log2rrd.pl &
 ./log2rrd.pl > /dev/null 
