@@ -1,33 +1,33 @@
-# systemd setup machine
+# `systemd` setup machine
 
-This is my first systemd start-stop configuration.  
+This is my first `systemd` start-stop configuration.  
 So I keep my memories here - for me and may be interested public.  
 
-## old times vs new times
+## Old Times vs New Times
 
-On development, I drafted the watchdog with 'good old' unix style in mind.  
+On development, I drafted the `watchdog.sh` with 'good old' unix style in mind.  
 So my plan was to wirte sysV init scripts in the end.  
   
-However, the times of sysV init are gone without doubt, even if 10 yr old pro/con discussions still lingering on the web may tell sth else.  
-sytemd is PID0 in these days.
+However, I had to find that the times of sysV init are gone without doubt, even if 10 yr old pro/con discussions still lingering on the web may tell sth else.  
+`sytemd` is `PID0` in these days.
 
-So I had to climb the systemd learning curve and found it not too steep at all.  
+So I had to climb the `systemd` learning curve and found it not too steep at all.  
 To be honest, I start to like it :-)  
-when I compare my watchdog and my startup scripts, they cut down by 3/4.  
+When I compare my watchdog and my startup scripts, they cut down by 3/4.  
 And the logger itself gets close to immortality - pure magic as it seems.  
   
-I have some more project to systemd'emonize.  
+I have some more project to `systemd`'emonize.  
 This one is my trainig. So doc is a bit more exhaustive.  
 
-When the stuff in this dir is working in the end, the "old" cron based watchdog might well go away.  
+When the stuff in this dir is working in the end, the "old" `cron` based `watchdog.sh` might well go away.  
 
 
-## how it works
+## How it Works
 
 
 ### `my_configure.pl`
-... is expanding itself into `guntamatic.service`, `install.sh`, `cleanup.sh`  
-no special makefile magic, just plain heredocs and some variable substitution  
+... is expanding itself into `guntamatic.service`, `install.sh`, `cleanup.sh`.  
+No special makefile magic, just plain heredocs and some variable substitution.  
 
 ### `cleanup.sh`
 just removes the 3 files just expanded, leave anything else intact
@@ -36,35 +36,36 @@ just removes the 3 files just expanded, leave anything else intact
 ### `install.sh`
 To be called as root.  
 Copies the unit file to `/where/ever/it/belongs`  
-and performs the required systemctl acrobatic.  
+and performs the required `systemctl` acrobatic.  
 Don't like it? Don't trust me? Different configurations?  
 Do it manually!
 
 ### `guntamatic.service`
-The **unit file** where systemd magic starts off.  
+... is the **unit file** where `systemd magic` starts off.  
 `man systemd.service` might be a good start to rtfM.  
-`/etc/systemd/system/guntamatic.service` might be a good place for it on recent systemd debian.  
+`/etc/systemd/system/guntamatic.service` might be a good place for it on recent `systemd` debian.  
 'works for me', at least.
 
-Important deviations from minimal systemd howto templates:  
+Important deviations from minimalistic `systemd` howto-templates:  
 
 #### `Type=notify` 
-says that the systemd wait until we report succesful start.  
+says that the `systemd` wait until **we report** succesful start.  
 I let the watchdog do this, and only if it finds recent rrd updates.  
-So of anything goes wrong (software, LAN, cauldron, power ,....) we are not able to start the demon.  
+So, if anything goes wrong (software, LAN, cauldron, power ,....) we are not able to start the demon.  
 I think this is OK in a stable environment.  
 
 #### `NotifyAccess=all` 
 is required to use cmd line `systemd-notify` notify tool.  
-I did not find any PERL binding to libnotify. `system(systemd-notify)` does the job, but reports to systemd with it's own PID.  
-We go with that. No need for a hight security environment here.  
+I did not find any PERL binding to libnotify. `system(systemd-notify)` does the job, but gets spawned as an owen process and thus reports to systemd with it's own PID.  
+We go with that. No need for paranoia here.  
 
 #### `User=`  
 #### `WorkingDirectory=`  
-... are real advantages compared to cron. Knowing who and where is coming makes live much easier.  
-`ExecStart` is the path to our `start.sh`.  
-`SyslogIdentifier=guntamatic-logger`: all STDERR goes to `/var/log/syslog`.  
-We want to have tagged it with a mnemonic string for easy read and grep.
+... are real advantages compared to `cron`. Knowing who and where is coming makes live much easier.  
+#### `ExecStart=` 
+is the (full) path to our `start.sh`.  
+#### `SyslogIdentifier=guntamatic-logger`
+ since all `STDERR` goes to `/var/log/syslog`, we want to have tagged it with a mnemonic string for easy read and grep.
 For the rest, see the watchdoc section.
 
 ### `start.sh`
