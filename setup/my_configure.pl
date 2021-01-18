@@ -25,7 +25,6 @@ my $helper_dir = "/usr/local/bin";
 my $setup_dir= Cwd::getcwd;
 my $base_dir= Cwd::abs_path( $setup_dir . '/..');  
 
-my $install_helpers = "ffoo bar tralalal\n"; 
 
 
 print "unit_file: $unit_file \n";
@@ -34,11 +33,11 @@ print "base_dir:  $base_dir \n" ;
 
 # die "DEBUG";
 
-
-
+#  setup executable
+#
 my $installer_template = <<"EOF_INSTALLER";
+# chmod 0644 $unit_file
 cp -i ./$unit_file $unit_dir/$unit_file
-$install_helpers
 
 systemctl daemon-reload
 systemctl enable $unit_file
@@ -47,30 +46,11 @@ echo "started service $unit_file"
 echo "entering watchdog - hit ^C to return"
 sleep 3
 watch -n1 systemctl status
-
 EOF_INSTALLER
 
-# maybe this is BS? have the starter script resident readily?
 
-my $script_template = << 'EOF_SCRIPT_TPL';
-#!/bin/bash
-
-echo "htg.service: ## Starting ##" | systemd-cat -p info
-
-# SLEEP=`cat ~/test/systemd/sleep.time`
-
-while :
-do
-        SLEEP=`cat  ~/test/systemd/sleep.time`
-        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
-        # echo "htg.service: timestamp ${TIMESTAMP}" | systemd-cat -p info
-        # echo -n "sleeptime is $SLEEP : "
-        echo "htg.service: timestamp ${TIMESTAMP} - sleeptime ${SLEEP} "
-        systemd-notify 'WATCHDOG=1'
-        sleep $SLEEP
-done
-EOF_SCRIPT_TPL
-
+# systemd service unit file
+# goes to /etc/systemd/system or so
 my $unit_file_template = << "EOF_UF_TPL";
 #  see man systemd.service — Service unit configuration
 [Unit]
@@ -87,7 +67,7 @@ ExecStart=$setup_dir/start.sh
 Restart=on-failure
 RestartSec=120
 TimeoutStartSec=180
-WatchdogSec=240
+WatchdogSec=60
 # man systemd.kill — Process killing procedure configuration
 # KillMode=process
 KillMode=control-group
@@ -104,15 +84,22 @@ rm -i cleanup.sh
 
 EOF_CLEANUP
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ extract setup goodies and tell what to do next  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 write_to_filex ($unit_file_template, $unit_file);
+chmod 0644, $unit_file;
 write_to_filex ($installer_template, 'install.sh');
+chmod 0755, 'install.sh';
 write_to_filex ($cleanup_template , 'cleanup.sh');
+chmod 0755, 'cleanup.sh';
+
+
+print "setup tools extracted\n";
+print "run 'sudo install.sh' or do it manually  \n";
+print "optinally may run 'cleanup.sh' to remove install tools again \n";
 
 
 
-# foo 
 exit ;
 
 
@@ -123,7 +110,7 @@ sub write_to_filex {
 	open(my $FH, '>', $filename) or die $!;
 	print $FH $str;
 	close($FH);
-	chmod 0755, $filename;
+	# chmod 0755, $filename;
 
 }
 

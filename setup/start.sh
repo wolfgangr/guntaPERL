@@ -6,15 +6,17 @@ SCRIPTDIR=`dirname "$0"`
 cd $SCRIPTDIR
 
 # spawn our associated babysitter
-./watchdog.sh &
+./watchdog.pl &
 
-cd ..
 # not sure what environment we get from systemd
+echo $PATH
+cd ..
 source /etc/profile
 source ~/.profile
+echo $PATH
 
-
+# launch the real thing
 ./log2rrd.pl &
 
-# does this help to report success to sysstemd?
+# report success to sysstemd just in case it's configured to ask for
 exit 0
