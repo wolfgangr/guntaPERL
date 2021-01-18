@@ -61,11 +61,18 @@ After=syslog.target network-online.target
 
 [Service]
 Type=notify
+# NotifyAccess=exec
+NotifyAccess=all
+User=wrosner
+WorkingDirectory=/home/wrosner/guntamatic/setup
+# Type=simple
+# Type=forking
 # ExecStartPost= ... watchdog???
 ExecStart=$setup_dir/start.sh
 # ExecStart=$base_dir/log2rrd.pl
+SyslogIdentifier=guntamatic-logger
 Restart=on-failure
-RestartSec=120
+RestartSec=20
 TimeoutStartSec=180
 WatchdogSec=60
 # man systemd.kill — Process killing procedure configuration
