@@ -56,7 +56,7 @@ while (1) {
 			$started = 1;	
 		}
 		# rint "WATCHDOG: $sd_notify_WD \n";
-		printf $logstring, $sd_notify_WD ;
+		# printf $logstring, $sd_notify_WD ;
 		system  $sd_notify_WD;
 		sleep $looptime;
 	} else {
