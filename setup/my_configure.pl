@@ -19,14 +19,19 @@ my $unit_dir = "/etc/systemd/system";  # this is OK for debian, on other systems
 
 my $unit_file = "$servicename.service";
 
-my @helpers = qw(rrd2csv.pl rrdtest.pl rnd_sleep.sh);
-my $helper_dir = "/usr/local/bin"; 
+# my @helpers = qw(rrd2csv.pl rrdtest.pl rnd_sleep.sh);
+# my $helper_dir = "/usr/local/bin"; 
 
 my $setup_dir= Cwd::getcwd;
 my $base_dir= Cwd::abs_path( $setup_dir . '/..');  
 
 
+# my $username = `echo \$USER` ;
+my @passdw = getpwuid($<);
+my $username = $passdw[0];
 
+
+print "username:  $username  \n";
 print "unit_file: $unit_file \n";
 print "setup_dir: $setup_dir \n"; 
 print "base_dir:  $base_dir \n" ;
@@ -39,6 +44,7 @@ my $installer_template = <<"EOF_INSTALLER";
 # chmod 0644 $unit_file
 cp -i ./$unit_file $unit_dir/$unit_file
 
+systemctl stop $unit_file
 systemctl daemon-reload
 systemctl enable $unit_file
 systemctl start $unit_file
@@ -63,8 +69,8 @@ After=syslog.target network-online.target
 Type=notify
 # NotifyAccess=exec
 NotifyAccess=all
-User=wrosner
-WorkingDirectory=/home/wrosner/guntamatic/setup
+User=$username
+WorkingDirectory=$setup_dir
 # Type=simple
 # Type=forking
 # ExecStartPost= ... watchdog???
