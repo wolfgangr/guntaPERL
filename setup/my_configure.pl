@@ -41,6 +41,7 @@ cp -i ./$unit_file $unit_dir/$unit_file
 $install_helpers
 
 systemctl daemon-reload
+systemctl enable $unit_file
 systemctl start $unit_file
 echo "started service $unit_file"
 echo "entering watchdog - hit ^C to return"
@@ -122,7 +123,7 @@ sub write_to_filex {
 	open(my $FH, '>', $filename) or die $!;
 	print $FH $str;
 	close($FH);
-	chmod 755, $filename;
+	chmod 0755, $filename;
 
 }
 
