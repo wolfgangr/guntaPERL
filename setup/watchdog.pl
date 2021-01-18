@@ -23,7 +23,7 @@ my $gracetime = 120 ;
 
 
 my $looptime = 20 ; # sleep between tests - recommended half of WatchdogSec=240 in service file
-# my $loopt_onfail = 5; # may switch to faster polling to 
+my $loopt_onfail = 2; # may switch to faster polling to 
 
 my $logstring = "guntamatic WATCHDOG: %s\n";
 
@@ -58,12 +58,14 @@ while (1) {
 		# rint "WATCHDOG: $sd_notify_WD \n";
 		printf $logstring, $sd_notify_WD ;
 		system  $sd_notify_WD;
+		sleep $looptime;
 	} else {
 		printf( $logstring, sprintf( " %d / %d files overdue ", $overdue_cnt, scalar @watched ) ) ;
+		sleep $loopt_onfail;
 	}
 
 
 	# interval
-	sleep $looptime;
+	# sleep $looptime;
 }
 # time()
