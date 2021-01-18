@@ -3,6 +3,7 @@
 # systemd starter script
 
 SCRIPTDIR=`dirname "$0"`
+echo $SCRIPTDIR
 cd $SCRIPTDIR
 
 # spawn our associated babysitter
@@ -10,13 +11,15 @@ cd $SCRIPTDIR
 
 # not sure what environment we get from systemd
 echo $PATH
+pwd
 cd ..
-source /etc/profile
-source ~/.profile
+# source /etc/profile
+# source ~/.profile
 echo $PATH
-
+pwd
 # launch the real thing
-./log2rrd.pl &
+# SCRIPTDIR/../log2rrd.pl &
+./log2rrd.pl
 
 # report success to sysstemd just in case it's configured to ask for
-exit 0
+# exit 0

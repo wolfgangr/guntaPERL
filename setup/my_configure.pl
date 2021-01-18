@@ -45,7 +45,7 @@ systemctl start $unit_file
 echo "started service $unit_file"
 echo "entering watchdog - hit ^C to return"
 sleep 3
-watch -n1 systemctl status
+watch -n1 systemctl status $unit_file
 EOF_INSTALLER
 
 
@@ -93,7 +93,7 @@ chmod 0755, 'install.sh';
 write_to_filex ($cleanup_template , 'cleanup.sh');
 chmod 0755, 'cleanup.sh';
 
-
+print "\n";
 print "setup tools extracted\n";
 print "run 'sudo install.sh' or do it manually  \n";
 print "optinally may run 'cleanup.sh' to remove install tools again \n";
